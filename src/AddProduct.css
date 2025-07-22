@@ -1,0 +1,224 @@
+.add-product-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  background-color: #f6f6f6;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.add-product-card {
+  background-color: white;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 520px;
+  position: relative;
+}
+
+.add-product-card h2 {
+  margin-bottom: 25px;
+  color: #333;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+/* Top Navigation Buttons */
+.top-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: transparent;
+  color: #ffb300;
+  border: 2px solid #ffb300;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+  background-color: #ffb300;
+  color: white;
+}
+
+/* Form Structure */
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  margin-bottom: 6px;
+  color: #555;
+  font-weight: 600;
+  display: block;
+}
+
+input {
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #fafafa;
+  transition: 0.3s ease;
+  width: 100%;
+}
+
+input:focus {
+  outline: none;
+  border-color: #ffb300;
+  background-color: #fffbe6;
+}
+
+/* Submit Button */
+.add-btn {
+  padding: 12px;
+  background-color: #ffb300;
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.add-btn:hover {
+  background-color: #ffa000;
+}
+.orders-container {
+  padding: 40px;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.orders-container h2 {
+  font-size: 2rem;
+  margin-bottom: 25px;
+  color: #333;
+  text-align: center;
+}
+
+.back-button {
+  display: inline-block;
+  padding: 8px 14px;
+  background-color: transparent;
+  color: #ffb300;
+  border: 2px solid #ffb300;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 30px;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #ffb300;
+  color: white;
+}
+
+.order-card {
+  background-color: white;
+  padding: 25px 30px;
+  margin-bottom: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.order-card:hover {
+  transform: translateY(-4px);
+}
+
+.order-card p,
+.order-card h4 {
+  margin: 8px 0;
+  color: #444;
+}
+
+.order-card ul {
+  padding-left: 20px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.order-card li {
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+}
+
+/* Status Badge */
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 20px;
+  margin: 10px 0;
+  color: white;
+}
+
+.status-badge.ordered {
+  background-color: #ff9800;
+}
+
+.status-badge.preparing {
+  background-color: #2196f3;
+}
+
+.status-badge.out-for-delivery {
+  background-color: #3f51b5;
+}
+
+.status-badge.delivered {
+  background-color: #4caf50;
+}
+
+/* Download Button */
+.download-btn {
+  background-color: #ffb300;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.download-btn:hover {
+  background-color: #ffa000;
+}
+
+/* Track Link */
+.track-link {
+  margin-top: 12px;
+}
+
+.track-link a {
+  color: #ffb300;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.track-link a:hover {
+  text-decoration: underline;
+  color: #ff8f00;
+}

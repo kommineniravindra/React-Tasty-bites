@@ -1,0 +1,27 @@
+/* Container for the entire slider */
+.slider {
+  position: absolute; /* Positions the slider relative to its closest positioned ancestor */
+  width: 100%;
+  height: 100%;
+  z-index: 1; /* Ensures it's behind content with higher z-index if any */
+  top: 0;
+  left: 0;
+  overflow: hidden; /* Hides any overflow from images */
+}
+
+/* Individual slide (image) */
+.slide {
+  position: absolute; /* Allows slides to stack on top of each other */
+  width: 100%;
+  height: 100%;
+  background-position: center; /* Centers the image */
+  background-size: cover; /* Ensures the image covers the entire slide area */
+  opacity: 0; /* Hidden by default */
+  transition: opacity 1s ease-in-out; /* Smooth fade transition */
+}
+
+/* Active slide */
+.slide.active {
+  opacity: 1; /* This is the crucial fix: Opacity must be between 0 and 1 for full visibility */
+  z-index: 2; /* Brings the active slide to the front */
+}

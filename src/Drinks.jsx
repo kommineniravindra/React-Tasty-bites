@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Veg.css'; // Reusing styles
 import { useCart } from './CartContext';
+// Import the spinner component
+import { BeatLoader } from 'react-spinners'; // Using BeatLoader for Drinks!
 
 function Drinks() {
   const [products, setProducts] = useState([]);
@@ -15,9 +17,12 @@ function Drinks() {
   const { addToCart } = useCart();
 
   useEffect(() => {
+    const MIN_LOAD_TIME = 10000; // 10 seconds in milliseconds
+    const startTime = Date.now();
+
     const fetchData = async () => {
       try {
-        setLoading(true);
+        setLoading(true); // Ensure loading is true when starting fetch
         const token = localStorage.getItem('token');
 
         const response = await axios.get('https://spring-apigateway.onrender.com/api/products/drinks', {
@@ -33,12 +38,24 @@ function Drinks() {
         console.error(err);
         setError('Failed to load drinks items');
       } finally {
-        setLoading(false);
+        const endTime = Date.now();
+        const elapsedTime = endTime - startTime;
+        const remainingTime = MIN_LOAD_TIME - elapsedTime;
+
+        if (remainingTime > 0) {
+          // If less than MIN_LOAD_TIME has passed, wait for the remainder
+          setTimeout(() => {
+            setLoading(false);
+          }, remainingTime);
+        } else {
+          // If MIN_LOAD_TIME has already passed, set loading to false immediately
+          setLoading(false);
+        }
       }
     };
 
     fetchData();
-  }, []);
+  }, []); // Empty dependency array means this runs once on component mount
 
   const handleCheckboxChange = (range) => {
     if (range === 'all') {
@@ -55,6 +72,8 @@ function Drinks() {
   };
 
   useEffect(() => {
+    // This useEffect filters products when selectedRanges or products change
+    // It should NOT affect the minimum load time for the initial fetch.
     if (selectedRanges.includes('all')) {
       setFilteredProducts(products);
       return;
@@ -70,7 +89,7 @@ function Drinks() {
     );
 
     setFilteredProducts(filtered);
-  }, [selectedRanges, products]);
+  }, [selectedRanges, products]); // Depend on selectedRanges and products
 
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
@@ -78,7 +97,7 @@ function Drinks() {
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
   return (
-    <div className="veg-section">
+    <div className="veg-section"> {/* Reusing veg-section class for layout */}
       <h3 className="section-title">🥤 Drinks</h3>
 
       {/* ✅ Filter Checkboxes */}
@@ -114,7 +133,11 @@ function Drinks() {
       </div>
 
       {loading ? (
-        <p className="status-message">Loading...</p>
+        <div className="spinner-container">
+          {/* Using BeatLoader for Drinks */}
+          <BeatLoader color="#00BFFF" loading={loading} size={15} margin={5} /> {/* Sky Blue for drinks */}
+          <p className="status-message">Pouring up some refreshing drinks...</p>
+        </div>
       ) : error ? (
         <p className="status-message error">{error}</p>
       ) : currentItems.length === 0 ? (

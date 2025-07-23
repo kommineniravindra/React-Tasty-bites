@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Veg.css';
 import { useCart } from './CartContext';
+import { RingLoader } from 'react-spinners'; // Assuming you're using this spinner
 
 function Veg() {
   const [products, setProducts] = useState([]);
@@ -10,14 +11,20 @@ function Veg() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0); // New state to trigger refresh
   const itemsPerPage = 8;
 
   const { addToCart } = useCart();
 
   useEffect(() => {
+    const MIN_LOAD_TIME = 10000; // 10 seconds in milliseconds
+    let startTime; // Declare startTime here
+
     const fetchData = async () => {
+      setLoading(true); // Always show loading when fetching starts
+      startTime = Date.now(); // Set startTime right before the async operation
+
       try {
-        setLoading(true);
         const token = localStorage.getItem('token');
         const response = await axios.get('https://spring-apigateway.onrender.com/api/products/veg', {
           headers: { Authorization: `Bearer ${token}` }
@@ -28,13 +35,25 @@ function Veg() {
       } catch (err) {
         console.error(err);
         setError('Failed to load veg items');
+        setProducts([]); // Clear products on error
+        setFilteredProducts([]); // Clear filtered products on error
       } finally {
-        setLoading(false);
+        const endTime = Date.now();
+        const elapsedTime = endTime - startTime;
+        const remainingTime = MIN_LOAD_TIME - elapsedTime;
+
+        if (remainingTime > 0) {
+          setTimeout(() => {
+            setLoading(false);
+          }, remainingTime);
+        } else {
+          setLoading(false);
+        }
       }
     };
 
     fetchData();
-  }, []);
+  }, [refreshTrigger]); // Add refreshTrigger to dependency array
 
   const handleCheckboxChange = (range) => {
     if (range === 'all') {
@@ -68,6 +87,12 @@ function Veg() {
     setFilteredProducts(filtered);
   }, [selectedRanges, products]);
 
+  const handleRefresh = () => {
+    setRefreshTrigger(prev => prev + 1); // Increment to trigger useEffect
+    setCurrentPage(1); // Reset pagination on refresh
+    setSelectedRanges(['all']); // Optionally reset filters on refresh
+  };
+
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentItems = filteredProducts.slice(indexOfFirst, indexOfLast);
@@ -77,7 +102,14 @@ function Veg() {
     <div className="veg-section">
       <h3 className="section-title">🌿 Veg Menu</h3>
 
-      {/* ✅ Price Filters */}
+      {/* Refresh Button */}
+      <div className="refresh-button-container">
+        <button className="refresh-button" onClick={handleRefresh} disabled={loading}>
+          {loading ? 'Refreshing...' : 'Refresh'}
+        </button>
+      </div>
+
+      {/* Price Filters */}
       <div className="checkbox-filter">
         <label>
           <input
@@ -110,7 +142,10 @@ function Veg() {
       </div>
 
       {loading ? (
-        <p className="status-message">Loading...</p>
+        <div className="spinner-container">
+          <RingLoader color="#ffb300" loading={loading} size={70} />
+          <p className="status-message">Loading delicious veg items...</p>
+        </div>
       ) : error ? (
         <p className="status-message error">{error}</p>
       ) : currentItems.length === 0 ? (

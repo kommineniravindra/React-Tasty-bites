@@ -135,3 +135,59 @@
 .status-message.error {
   color: red;
 }
+/* Veg.css */
+
+/* Keep this for centering the spinner and text */
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px; /* Adjust as needed */
+  width: 100%;
+}
+
+/* Keep this for the loading text */
+.status-message {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #333;
+  margin-top: 15px; /* Adjust spacing below the spinner */
+}
+
+.status-message.error {
+  color: red;
+}
+
+/* Veg.css - Update these styles */
+
+.refresh-button-container {
+  display: flex; /* Make it a flex container */
+  justify-content: flex-end; /* Align content to the right (end of the flex container) */
+  margin-bottom: 20px; /* Space between button and filters */
+  /* You might want to add some padding to the right if it's too close to the edge */
+  padding-right: 20px; /* Example padding */
+}
+
+.refresh-button {
+  padding: 10px 20px;
+  background-color: #4CAF50; /* A nice green color, change as desired */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.refresh-button:hover:not(:disabled) {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+.refresh-button:disabled {
+  background-color: #cccccc; /* Grey out when disabled */
+  cursor: not-allowed;
+}
+
+/* ... keep all your other existing CSS for .veg-section, .spinner-container, etc. ... */

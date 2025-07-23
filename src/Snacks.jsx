@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Veg.css'; // Reuse Veg styles
 import { useCart } from './CartContext';
+// Import the spinner component
+import { ClipLoader } from 'react-spinners'; // Let's try ClipLoader for Snacks!
 
 function Snacks() {
   const [products, setProducts] = useState([]);
@@ -15,9 +17,12 @@ function Snacks() {
   const { addToCart } = useCart();
 
   useEffect(() => {
+    const MIN_LOAD_TIME = 10000; // 10 seconds in milliseconds
+    const startTime = Date.now();
+
     const fetchData = async () => {
       try {
-        setLoading(true);
+        setLoading(true); // Ensure loading is true when starting fetch
         const token = localStorage.getItem('token');
 
         const response = await axios.get('https://spring-apigateway.onrender.com/api/products/snacks', {
@@ -33,12 +38,24 @@ function Snacks() {
         console.error("Failed to load snack items:", err);
         setError('Failed to load snack items');
       } finally {
-        setLoading(false);
+        const endTime = Date.now();
+        const elapsedTime = endTime - startTime;
+        const remainingTime = MIN_LOAD_TIME - elapsedTime;
+
+        if (remainingTime > 0) {
+          // If less than MIN_LOAD_TIME has passed, wait for the remainder
+          setTimeout(() => {
+            setLoading(false);
+          }, remainingTime);
+        } else {
+          // If MIN_LOAD_TIME has already passed, set loading to false immediately
+          setLoading(false);
+        }
       }
     };
 
     fetchData();
-  }, []);
+  }, []); // Empty dependency array means this runs once on component mount
 
   // Price range filter logic
   const handleCheckboxChange = (range) => {
@@ -56,6 +73,8 @@ function Snacks() {
   };
 
   useEffect(() => {
+    // This useEffect filters products when selectedRanges or products change
+    // It should NOT affect the minimum load time for the initial fetch.
     if (selectedRanges.includes('all')) {
       setFilteredProducts(products);
       return;
@@ -71,7 +90,7 @@ function Snacks() {
     );
 
     setFilteredProducts(filtered);
-  }, [selectedRanges, products]);
+  }, [selectedRanges, products]); // Depend on selectedRanges and products
 
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
@@ -79,7 +98,7 @@ function Snacks() {
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
   return (
-    <div className="veg-section">
+    <div className="veg-section"> {/* Reusing veg-section class for layout */}
       <h3 className="section-title">🍟 Crispy Snacks</h3>
 
       {/* ✅ Price Filter */}
@@ -115,7 +134,11 @@ function Snacks() {
       </div>
 
       {loading ? (
-        <p className="status-message">Loading...</p>
+        <div className="spinner-container">
+          {/* Using a different premium spinner for Snacks */}
+          <ClipLoader color="#32CD32" loading={loading} size={70} /> {/* LimeGreen for snacks! */}
+          <p className="status-message">Loading crispy snacks...</p>
+        </div>
       ) : error ? (
         <p className="status-message error">{error}</p>
       ) : currentItems.length === 0 ? (

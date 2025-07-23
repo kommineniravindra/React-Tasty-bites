@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './Veg.css'; // reuse styles
+import './Veg.css'; // Reusing existing styles for now
 import { useCart } from './CartContext';
+// Import the spinner component
+import { RingLoader } from 'react-spinners'; // We'll use RingLoader for consistency
 
 function NonVeg() {
   const [products, setProducts] = useState([]);
@@ -15,9 +17,12 @@ function NonVeg() {
   const { addToCart } = useCart();
 
   useEffect(() => {
+    const MIN_LOAD_TIME = 10000; // 10 seconds in milliseconds
+    const startTime = Date.now();
+
     const fetchData = async () => {
       try {
-        setLoading(true);
+        setLoading(true); // Ensure loading is true when starting fetch
         const token = localStorage.getItem('token');
 
         const response = await axios.get('https://spring-apigateway.onrender.com/api/products/nonveg', {
@@ -33,12 +38,24 @@ function NonVeg() {
         console.error(err);
         setError('Failed to load nonveg items');
       } finally {
-        setLoading(false);
+        const endTime = Date.now();
+        const elapsedTime = endTime - startTime;
+        const remainingTime = MIN_LOAD_TIME - elapsedTime;
+
+        if (remainingTime > 0) {
+          // If less than MIN_LOAD_TIME has passed, wait for the remainder
+          setTimeout(() => {
+            setLoading(false);
+          }, remainingTime);
+        } else {
+          // If MIN_LOAD_TIME has already passed, set loading to false immediately
+          setLoading(false);
+        }
       }
     };
 
     fetchData();
-  }, []);
+  }, []); // Empty dependency array means this runs once on component mount
 
   const handleCheckboxChange = (range) => {
     if (range === 'all') {
@@ -55,6 +72,8 @@ function NonVeg() {
   };
 
   useEffect(() => {
+    // This useEffect filters products when selectedRanges or products change
+    // It should NOT affect the minimum load time for the initial fetch.
     if (selectedRanges.includes('all')) {
       setFilteredProducts(products);
       return;
@@ -70,7 +89,7 @@ function NonVeg() {
     );
 
     setFilteredProducts(filtered);
-  }, [selectedRanges, products]);
+  }, [selectedRanges, products]); // Depend on selectedRanges and products
 
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
@@ -78,7 +97,7 @@ function NonVeg() {
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
   return (
-    <div className="veg-section">
+    <div className="veg-section"> {/* Reusing veg-section class for layout */}
       <h3 className="section-title">🍗 NonVeg Menu</h3>
 
       {/* ✅ Price Filter Checkboxes */}
@@ -114,11 +133,15 @@ function NonVeg() {
       </div>
 
       {loading ? (
-        <p className="status-message">Loading...</p>
+        <div className="spinner-container">
+          {/* Using a premium spinner from react-spinners */}
+          <RingLoader color="#d9534f" loading={loading} size={70} /> {/* Changed color to red for NonVeg */}
+          <p className="status-message">Loading delicious non-veg items...</p>
+        </div>
       ) : error ? (
         <p className="status-message error">{error}</p>
       ) : currentItems.length === 0 ? (
-        <p className="status-message">No nonveg items available.</p>
+        <p className="status-message">No non-veg items available.</p>
       ) : (
         <>
           <div className="card-grid">

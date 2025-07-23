@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './Veg.css'; // Reusing existing styles for now
+import './Veg.css'; // Reusing existing styles
 import { useCart } from './CartContext';
 // Import the spinner component
-import { RingLoader } from 'react-spinners'; // We'll use RingLoader for consistency
+import { RingLoader } from 'react-spinners'; // Using RingLoader for consistency
 
 function NonVeg() {
   const [products, setProducts] = useState([]);
@@ -12,17 +12,20 @@ function NonVeg() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0); // New state for refresh
   const itemsPerPage = 8;
 
   const { addToCart } = useCart();
 
   useEffect(() => {
     const MIN_LOAD_TIME = 10000; // 10 seconds in milliseconds
-    const startTime = Date.now();
+    let startTime; // Declare startTime here
 
     const fetchData = async () => {
+      setLoading(true); // Ensure loading is true when starting fetch
+      startTime = Date.now(); // Set startTime right before the async operation
+
       try {
-        setLoading(true); // Ensure loading is true when starting fetch
         const token = localStorage.getItem('token');
 
         const response = await axios.get('https://spring-apigateway.onrender.com/api/products/nonveg', {
@@ -37,6 +40,8 @@ function NonVeg() {
       } catch (err) {
         console.error(err);
         setError('Failed to load nonveg items');
+        setProducts([]); // Clear products on error
+        setFilteredProducts([]); // Clear filtered products on error
       } finally {
         const endTime = Date.now();
         const elapsedTime = endTime - startTime;
@@ -55,7 +60,7 @@ function NonVeg() {
     };
 
     fetchData();
-  }, []); // Empty dependency array means this runs once on component mount
+  }, [refreshTrigger]); // Add refreshTrigger to dependency array
 
   const handleCheckboxChange = (range) => {
     if (range === 'all') {
@@ -91,6 +96,12 @@ function NonVeg() {
     setFilteredProducts(filtered);
   }, [selectedRanges, products]); // Depend on selectedRanges and products
 
+  const handleRefresh = () => {
+    setRefreshTrigger(prev => prev + 1); // Increment to trigger useEffect
+    setCurrentPage(1); // Reset pagination on refresh
+    setSelectedRanges(['all']); // Optionally reset filters on refresh
+  };
+
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentItems = filteredProducts.slice(indexOfFirst, indexOfLast);
@@ -99,6 +110,13 @@ function NonVeg() {
   return (
     <div className="veg-section"> {/* Reusing veg-section class for layout */}
       <h3 className="section-title">🍗 NonVeg Menu</h3>
+
+      {/* Refresh Button */}
+      <div className="refresh-button-container">
+        <button className="refresh-button" onClick={handleRefresh} disabled={loading}>
+          {loading ? 'Refreshing...' : 'Refresh'}
+        </button>
+      </div>
 
       {/* ✅ Price Filter Checkboxes */}
       <div className="checkbox-filter">

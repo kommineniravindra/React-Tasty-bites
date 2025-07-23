@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './Veg.css'; // Reuse Veg styles
+import './Veg.css'; // Reusing styles
 import { useCart } from './CartContext';
 // Import the spinner component
-import { ClipLoader } from 'react-spinners'; // Let's try ClipLoader for Snacks!
+import { ClipLoader } from 'react-spinners'; // Using ClipLoader for Snacks!
 
 function Snacks() {
   const [products, setProducts] = useState([]);
@@ -12,17 +12,20 @@ function Snacks() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0); // New state for refresh button
   const itemsPerPage = 8;
 
   const { addToCart } = useCart();
 
   useEffect(() => {
     const MIN_LOAD_TIME = 10000; // 10 seconds in milliseconds
-    const startTime = Date.now();
+    let startTime; // Declare startTime here
 
     const fetchData = async () => {
+      setLoading(true); // Ensure loading is true when starting fetch
+      startTime = Date.now(); // Set startTime right before the async operation
+
       try {
-        setLoading(true); // Ensure loading is true when starting fetch
         const token = localStorage.getItem('token');
 
         const response = await axios.get('https://spring-apigateway.onrender.com/api/products/snacks', {
@@ -37,6 +40,8 @@ function Snacks() {
       } catch (err) {
         console.error("Failed to load snack items:", err);
         setError('Failed to load snack items');
+        setProducts([]); // Clear products on error
+        setFilteredProducts([]); // Clear filtered products on error
       } finally {
         const endTime = Date.now();
         const elapsedTime = endTime - startTime;
@@ -55,7 +60,7 @@ function Snacks() {
     };
 
     fetchData();
-  }, []); // Empty dependency array means this runs once on component mount
+  }, [refreshTrigger]); // Add refreshTrigger to dependency array to re-run on refresh
 
   // Price range filter logic
   const handleCheckboxChange = (range) => {
@@ -74,7 +79,8 @@ function Snacks() {
 
   useEffect(() => {
     // This useEffect filters products when selectedRanges or products change
-    // It should NOT affect the minimum load time for the initial fetch.
+    // It does NOT affect the minimum load time for the initial fetch,
+    // nor does it trigger a full re-fetch from the API.
     if (selectedRanges.includes('all')) {
       setFilteredProducts(products);
       return;
@@ -92,6 +98,13 @@ function Snacks() {
     setFilteredProducts(filtered);
   }, [selectedRanges, products]); // Depend on selectedRanges and products
 
+  // Function to handle the refresh button click
+  const handleRefresh = () => {
+    setRefreshTrigger(prev => prev + 1); // Increment to trigger the useEffect
+    setCurrentPage(1); // Reset pagination on refresh
+    setSelectedRanges(['all']); // Optionally reset filters to 'all' on refresh
+  };
+
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentItems = filteredProducts.slice(indexOfFirst, indexOfLast);
@@ -100,6 +113,13 @@ function Snacks() {
   return (
     <div className="veg-section"> {/* Reusing veg-section class for layout */}
       <h3 className="section-title">🍟 Crispy Snacks</h3>
+
+      {/* Refresh Button - positioned on the right via CSS */}
+      <div className="refresh-button-container">
+        <button className="refresh-button" onClick={handleRefresh} disabled={loading}>
+          {loading ? 'Refreshing...' : 'Refresh'}
+        </button>
+      </div>
 
       {/* ✅ Price Filter */}
       <div className="checkbox-filter">
@@ -135,7 +155,7 @@ function Snacks() {
 
       {loading ? (
         <div className="spinner-container">
-          {/* Using a different premium spinner for Snacks */}
+          {/* Using ClipLoader for Snacks */}
           <ClipLoader color="#32CD32" loading={loading} size={70} /> {/* LimeGreen for snacks! */}
           <p className="status-message">Loading crispy snacks...</p>
         </div>

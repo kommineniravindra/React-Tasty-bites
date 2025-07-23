@@ -2,8 +2,11 @@ import React, { useEffect, useState, useCallback } from 'react';
 import './OrdersPage.css';
 import { useNavigate } from 'react-router-dom';
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable'; // Ensure this import is correct and autoTable is used properly
-import { FaChevronDown, FaChevronUp, FaFileInvoice, FaHome, FaClipboardList } from 'react-icons/fa'; // Added icons
+import autoTable from 'jspdf-autotable';
+import { FaChevronDown, FaChevronUp, FaFileInvoice, FaHome, FaClipboardList } from 'react-icons/fa';
+
+// --- REMOVED NAVBAR IMPORT ---
+// import Navbar from './Navbar'; // No longer needed if Navbar is not rendered here
 
 function OrdersPage() {
   const [orders, setOrders] = useState([]);
@@ -129,16 +132,15 @@ function OrdersPage() {
       `₹${(item.price * item.quantity).toFixed(2)}`
     ]);
 
-    let startY = 60; // Define the Y position where the table should start
+    let startY = 60;
 
-    // Only call autoTable if there are items, otherwise it might not set doc.autoTable.previous
     if (tableRows.length > 0) {
       autoTable(doc, {
         startY: startY,
         head: [["Product", "Price", "Qty", "Subtotal"]],
         body: tableRows,
         theme: 'grid',
-        headStyles: { fillColor: [176, 58, 46] }, // Terracotta header for PDF
+        headStyles: { fillColor: [176, 58, 46] },
         styles: {
           fontSize: 10,
           cellPadding: 3,
@@ -153,7 +155,6 @@ function OrdersPage() {
       });
     }
 
-    // Safely get finalY: Check if doc.autoTable.previous exists, otherwise use startY with some padding
     let finalY = (doc.autoTable && doc.autoTable.previous) ? doc.autoTable.previous.finalY : startY + 5;
 
     doc.setFontSize(12);
@@ -173,6 +174,7 @@ function OrdersPage() {
   };
 
   return (
+    // Removed the outer <> </> (Fragment) as Navbar is no longer rendered
     <div className="orders-modern-container">
       <div className="orders-modern-header">
         <h2 className="header-title">Your Orders</h2>
@@ -180,7 +182,7 @@ function OrdersPage() {
           <button className="back-to-menu-btn" onClick={() => navigate("/user/home")}>
             <FaHome /> Back to Menu
           </button>
-          <button className="view-cart-btn" onClick={() => navigate("/cart")}>
+          <button className="view-cart-btn" onClick={() => navigate("/user/cart")}>
             <FaClipboardList /> View Cart
           </button>
         </div>
@@ -272,9 +274,9 @@ function OrdersPage() {
                       <span className="detail-label">Payment Mode:</span> {order.paymentMode}
                     </p>
                     {order.orderStage.toLowerCase() === 'pending' && (
-                      <p>
-                        <span className="detail-label">Delivery Partner:</span> {order.deliveryPartner}
-                      </p>
+                        <p>
+                          <span className="detail-label">Delivery Partner:</span> {order.deliveryPartner}
+                        </p>
                     )}
                     <p>
                       <span className="detail-label">ETA:</span> {order.eta}
@@ -287,7 +289,7 @@ function OrdersPage() {
                     </button>
                     {order.orderStage.toLowerCase() === 'pending' && (
                         <button className="cancel-order-btn">
-                            Cancel Order
+                          Cancel Order
                         </button>
                     )}
                   </div>

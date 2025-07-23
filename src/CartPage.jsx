@@ -3,7 +3,7 @@ import { useCart } from './CartContext';
 import { useNavigate } from 'react-router-dom';
 import './CartPage.css';
 import QRCode from 'react-qr-code';
-import { FaLock, FaQuestionCircle, FaShieldAlt, FaQrcode, FaCreditCard, FaChevronDown, FaChevronUp, FaPlusCircle, FaArrowLeft, FaClipboardList } from 'react-icons/fa';
+import { FaLock, FaQuestionCircle, FaShieldAlt, FaQrcode, FaCreditCard, FaChevronDown, FaChevronUp, FaPlusCircle, FaArrowLeft, FaClipboardList, FaEnvelope } from 'react-icons/fa'; // Import FaEnvelope
 import emailjs from '@emailjs/browser';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -35,7 +35,11 @@ const CartPage = () => {
   const [discount, setDiscount] = useState(0);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
-  const [visibleSection, setVisibleSection] = useState('');
+  // State for collapsible sections
+  const [visibleSection, setVisibleSection] = useState(''); // For payment methods
+  const [isBillSummaryOpen, setIsBillSummaryOpen] = useState(true); // For Bill Summary
+  const [isEmailSectionOpen, setIsEmailSectionOpen] = useState(true); // NEW: For Email Section
+
 
   // Card payment form states
   const [cardNumber, setCardNumber] = useState('');
@@ -50,10 +54,7 @@ const CartPage = () => {
   const token = localStorage.getItem('token');
   const customerEmail = localStorage.getItem('email') || '';
   const [userEmail, setUserEmail] = useState(customerEmail);
-  const showEmailInput = !customerEmail;
-
-
-
+  const showEmailInput = !customerEmail; 
 
   // Fixed values for shipping and tax, now ensuring they are numbers for calculation
   const shippingCost = 20;
@@ -255,6 +256,14 @@ const CartPage = () => {
     setVisibleSection((prev) => (prev === section ? '' : section));
   };
 
+  const toggleBillSummary = () => {
+    setIsBillSummaryOpen((prev) => !prev);
+  };
+
+  const toggleEmailSection = () => { // NEW: Toggle function for Email Section
+    setIsEmailSectionOpen((prev) => !prev);
+  };
+
   const handleCardNumberChange = (e) => {
     let value = e.target.value.replace(/\s/g, '');
     value = value.replace(/(\d{4})/g, '$1 ').trim();
@@ -283,7 +292,7 @@ const CartPage = () => {
   return (
     <div className="cart-container-template">
       <ToastContainer />
-      <h2 className="my-cart-heading">My Cart</h2>
+      <h2 className="my-cart-heading">My Cart ({cartItems.length})</h2>
 
       {/* Conditional rendering for empty cart / checkout success vs. active cart */}
       {isCheckedOut || cartItems.length === 0 ? (
@@ -360,9 +369,7 @@ const CartPage = () => {
                       />
                       <div className="item-info-template">
                         <div className="item-name-template">{item.name}</div>
-                        {/* Changed from 'Color: OLIVE/MULTI' to use item.category */}
                         {item.category && <div className="item-category-template">Category: {item.category}</div>}
-                        {/* Removed 'Size: S' line as it's not universally applicable for food items */}
                         <div className="item-status-template">In Stock</div>
                         <div className="item-actions">
                           <button className="item-action-btn item-action-edit">Edit</button>
@@ -373,7 +380,7 @@ const CartPage = () => {
                       </div>
                     </td>
                     <td className="item-price-cell">
-                      ₹{item.price.toFixed(2)} {/* Changed $ to ₹ */}
+                      ₹{item.price.toFixed(2)}
                     </td>
                     <td className="item-quantity-cell">
                       <div className="quantity-controls-template">
@@ -389,7 +396,7 @@ const CartPage = () => {
                       </div>
                     </td>
                     <td className="item-total-cell">
-                      ₹{(item.price * item.quantity).toFixed(2)} {/* Changed $ to ₹ */}
+                      ₹{(item.price * item.quantity).toFixed(2)}
                     </td>
                   </tr>
                 ))}
@@ -397,17 +404,14 @@ const CartPage = () => {
             </table>
             <div className="cart-items-summary-bottom">
                 <span className="items-count">{cartItems.length} {cartItems.length === 1 ? 'Item' : 'Items'}</span>
-                <span className="cart-subtotal-bottom">₹{totalAmount.toFixed(2)}</span> {/* Changed $ to ₹ */}
+                <span className="cart-subtotal-bottom">₹{totalAmount.toFixed(2)}</span>
             </div>
             <button className="clear-cart-btn" onClick={clearCart}>Clear All Items</button>
-
-
-
-
           </div>
 
-          {/* Right Column: Order Summary */}
+          {/* Right Column: Order Summary and Payment */}
           <div className="cart-sidebar-column">
+            {/* Promo Code Section */}
             <div className="promo-code-section">
               <label htmlFor="promo-code-input" className="promo-code-label">ENTER PROMO CODE</label>
               <div className="promo-input-group">
@@ -424,35 +428,42 @@ const CartPage = () => {
               </div>
             </div>
 
-            <div className="order-summary-details-template">
-              <div className="summary-line">
-                <span className="summary-label">Shipping cost</span>
-                <span className="summary-value">₹{shippingCost.toFixed(2)}</span> {/* Changed $ to ₹ */}
-              </div>
-              <div className="summary-line">
-                <span className="summary-label">Discount</span>
-                <span className="summary-value discount-value">-₹{discountAmount.toFixed(2)}</span> {/* Changed $ to ₹ */}
-              </div>
-              <div className="summary-line">
-                <span className="summary-label">Tax</span>
-                <span className="summary-value">₹{taxCost.toFixed(2)}</span> {/* Changed $ to ₹ */}
-              </div>
-              <div className="summary-line estimated-total-line">
-                <span className="summary-label">Estimated Total</span>
-                <span className="summary-value estimated-total-value">₹{estimatedTotal}</span> {/* Changed $ to ₹ */}
-              </div>
+            {/* Bill Summary Section (Collapsible) */}
+            <div className={`payment-method-panel ${isBillSummaryOpen ? 'active' : ''}`}>
+                <div className="panel-header" onClick={toggleBillSummary}>
+                    <FaClipboardList className="panel-icon" />
+                    <span>Bill Summary</span>
+                    {isBillSummaryOpen ? <FaChevronUp /> : <FaChevronDown />}
+                </div>
+                {isBillSummaryOpen && (
+                    <div className="panel-content order-summary-details-template">
+                        <div className="summary-line">
+                            <span className="summary-label">Subtotal</span>
+                            <span className="summary-value">₹{totalAmount.toFixed(2)}</span>
+                        </div>
+                        <div className="summary-line">
+                            <span className="summary-label">Shipping cost</span>
+                            <span className="summary-value">₹{shippingCost.toFixed(2)}</span>
+                        </div>
+                        <div className="summary-line">
+                            <span className="summary-label">Discount</span>
+                            <span className="summary-value discount-value">-₹{discountAmount.toFixed(2)}</span>
+                        </div>
+                        <div className="summary-line">
+                            <span className="summary-label">Tax</span>
+                            <span className="summary-value">₹{taxCost.toFixed(2)}</span>
+                        </div>
+                        <div className="summary-line estimated-total-line">
+                            <span className="summary-label">Estimated Total</span>
+                            <span className="summary-value estimated-total-value">₹{estimatedTotal}</span>
+                        </div>
+                    </div>
+                )}
             </div>
-
-            <div className="afterpay-section">
-                <span>or 4 interest-free payments of ₹{ (estimatedTotal / 4).toFixed(2) } with</span> {/* Changed $ to ₹ */}
-                <img src="/images/afterpay_logo.png" alt="Afterpay" className="afterpay-logo" />
-                <FaQuestionCircle className="afterpay-info-icon" />
-            </div>
-
             {/* Dynamic Free Shipping Progress Bar */}
             {remainingForFreeShipping > 0 && (
                 <div className="free-shipping-progress-container">
-                    <p className="free-shipping-progress-text">You're ₹{remainingForFreeShipping.toFixed(2)} away from free shipping!</p> {/* Changed $ to ₹ */}
+                    <p className="free-shipping-progress-text">You're ₹{remainingForFreeShipping.toFixed(2)} away from free shipping!</p>
                     <div className="progress-bar-outer">
                         <div className="progress-bar-inner" style={{width: `${freeShippingProgress}%`}}></div>
                     </div>
@@ -464,26 +475,38 @@ const CartPage = () => {
                 </div>
             )}
 
-            {/* Re-integrated Email Section */}
-            {showEmailInput ? (
-                <div className="email-input-section">
-                    <p className="email-prompt">Enter your email for order details:</p>
-                    <input
-                        type="email"
-                        value={userEmail}
-                        onChange={(e) => setUserEmail(e.target.value)}
-                        placeholder="e.g., yourname@example.com"
-                        className="email-input-field"
-                    />
+            {/* NEW: Email Section (Collapsible) */}
+            <div className={`payment-method-panel ${isEmailSectionOpen ? 'active' : ''}`}>
+                <div className="panel-header" onClick={toggleEmailSection}>
+                    <FaEnvelope className="panel-icon" /> {/* Envelope icon for email */}
+                    <span>Email for Order Details</span>
+                    {isEmailSectionOpen ? <FaChevronUp /> : <FaChevronDown />}
                 </div>
-            ) : (
-                <div className="email-display-section">
-                    <p className="email-prompt">Order details will be sent to:</p>
-                    <strong className="customer-email-display">{customerEmail}</strong>
-                </div>
-            )}
+                {isEmailSectionOpen && (
+                    <div className="panel-content"> {/* No specific template class for email content needed unless unique styling */}
+                        {showEmailInput ? (
+                            <div className="email-input-section">
+                                <p className="email-prompt">Enter your email for order details:</p>
+                                <input
+                                    type="email"
+                                    value={userEmail}
+                                    onChange={(e) => setUserEmail(e.target.value)}
+                                    placeholder="e.g., yourname@example.com"
+                                    className="email-input-field"
+                                />
+                            </div>
+                        ) : (
+                            <div className="email-display-section">
+                                <p className="email-prompt">Order details will be sent to:</p>
+                                <strong className="customer-email-display">{customerEmail}</strong>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
 
-            {/* Re-integrated Payment Options Container (collapsible panels) */}
+
+            {/* Payment Options Container (collapsible panels) */}
             <div className="payment-options-container">
                 <h4 className="payment-options-heading">Choose Payment Method</h4>
 
@@ -496,7 +519,7 @@ const CartPage = () => {
                     </div>
                     {visibleSection === 'qr' && (
                         <div className="panel-content qr-code-section">
-                            <h4>Scan to Pay ₹{estimatedTotal}</h4> {/* Changed $ to ₹ */}
+                            <h4>Scan to Pay ₹{estimatedTotal}</h4>
                             <QRCode
                                 value={`upi://pay?pa=9603262008@ybl&pn=TASTYBITE'S&am=${estimatedTotal}&cu=INR`}
                                 size={120}
@@ -552,11 +575,6 @@ const CartPage = () => {
                                     />
                                 </div>
                             </div>
-                            <img
-                                className="card-logo-reintegrated"
-                                src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg"
-                                alt="Visa Logo"
-                            />
                         </div>
                     )}
                 </div>
@@ -587,3 +605,4 @@ const CartPage = () => {
 };
 
 export default CartPage;
+ 

@@ -1,31 +1,37 @@
+/* AddProduct.css - Modern Orange-Black-White-Gold Theme */
+
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #fdfdfd;
+}
+
 .add-product-page {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #fffaf0, #fff);
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 40px;
-  background-color: #f6f6f6;
-  min-height: 100vh;
-  font-family: 'Segoe UI', sans-serif;
+  padding: 40px 20px;
 }
 
 .add-product-card {
-  background-color: white;
-  padding: 30px 40px;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+  padding: 40px 30px;
   width: 100%;
-  max-width: 520px;
+  max-width: 550px;
   position: relative;
 }
 
-.add-product-card h2 {
-  margin-bottom: 25px;
-  color: #333;
-  font-size: 1.8rem;
+h2 {
   text-align: center;
+  color: #ff6f00;
+  margin-bottom: 30px;
 }
 
-/* Top Navigation Buttons */
 .top-buttons {
   display: flex;
   justify-content: space-between;
@@ -33,28 +39,21 @@
 }
 
 .nav-btn {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  font-size: 14px;
+  border-radius: 30px;
   display: flex;
   align-items: center;
-  padding: 8px 12px;
-  background-color: transparent;
-  color: #ffb300;
-  border: 2px solid #ffb300;
-  border-radius: 6px;
-  font-weight: bold;
   cursor: pointer;
-  font-size: 0.9rem;
   transition: all 0.3s ease;
 }
 
 .nav-btn:hover {
-  background-color: #ffb300;
+  background-color: #ff6f00;
   color: white;
-}
-
-/* Form Structure */
-form {
-  display: flex;
-  flex-direction: column;
 }
 
 .form-group {
@@ -62,163 +61,43 @@ form {
 }
 
 label {
-  margin-bottom: 6px;
-  color: #555;
-  font-weight: 600;
   display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
 }
 
-input {
-  padding: 10px 14px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
-  background-color: #fafafa;
-  transition: 0.3s ease;
+input[type="text"],
+input[type="number"] {
   width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  outline: none;
+  transition: 0.3s ease;
+  font-size: 15px;
 }
 
 input:focus {
-  outline: none;
-  border-color: #ffb300;
-  background-color: #fffbe6;
+  border-color: #ff6f00;
+  box-shadow: 0 0 0 2px rgba(255, 111, 0, 0.2);
 }
 
-/* Submit Button */
 .add-btn {
-  padding: 12px;
-  background-color: #ffb300;
+  width: 100%;
+  background-color: #ff6f00;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 14px;
   border: none;
-  color: white;
-  font-weight: bold;
-  font-size: 1rem;
-  border-radius: 6px;
+  border-radius: 30px;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 5px 14px rgba(255, 111, 0, 0.3);
 }
 
 .add-btn:hover {
-  background-color: #ffa000;
-}
-.orders-container {
-  padding: 40px;
-  background-color: #f9f9f9;
-  min-height: 100vh;
-  font-family: 'Segoe UI', sans-serif;
-}
-
-.orders-container h2 {
-  font-size: 2rem;
-  margin-bottom: 25px;
-  color: #333;
-  text-align: center;
-}
-
-.back-button {
-  display: inline-block;
-  padding: 8px 14px;
-  background-color: transparent;
-  color: #ffb300;
-  border: 2px solid #ffb300;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-bottom: 30px;
-  transition: all 0.3s ease;
-}
-
-.back-button:hover {
-  background-color: #ffb300;
-  color: white;
-}
-
-.order-card {
-  background-color: white;
-  padding: 25px 30px;
-  margin-bottom: 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease;
-}
-
-.order-card:hover {
-  transform: translateY(-4px);
-}
-
-.order-card p,
-.order-card h4 {
-  margin: 8px 0;
-  color: #444;
-}
-
-.order-card ul {
-  padding-left: 20px;
-  margin-top: 10px;
-  margin-bottom: 20px;
-}
-
-.order-card li {
-  margin-bottom: 6px;
-  font-size: 0.95rem;
-}
-
-/* Status Badge */
-.status-badge {
-  display: inline-block;
-  padding: 6px 12px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  border-radius: 20px;
-  margin: 10px 0;
-  color: white;
-}
-
-.status-badge.ordered {
-  background-color: #ff9800;
-}
-
-.status-badge.preparing {
-  background-color: #2196f3;
-}
-
-.status-badge.out-for-delivery {
-  background-color: #3f51b5;
-}
-
-.status-badge.delivered {
-  background-color: #4caf50;
-}
-
-/* Download Button */
-.download-btn {
-  background-color: #ffb300;
-  color: white;
-  padding: 10px 16px;
-  border: none;
-  font-weight: bold;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-size: 0.95rem;
-}
-
-.download-btn:hover {
-  background-color: #ffa000;
-}
-
-/* Track Link */
-.track-link {
-  margin-top: 12px;
-}
-
-.track-link a {
-  color: #ffb300;
-  font-weight: 600;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.track-link a:hover {
-  text-decoration: underline;
-  color: #ff8f00;
+  background-color: #e65100;
+  transform: scale(1.02);
 }

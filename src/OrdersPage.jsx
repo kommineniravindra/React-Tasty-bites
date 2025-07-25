@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import axios from 'axios';
-import { FaChevronDown, FaChevronUp, FaFileInvoice, FaHome, FaClipboardList } from 'react-icons/fa';
+import { FaChevronDown, FaChevronUp, FaFileInvoice, FaHome, FaClipboardList, FaSyncAlt } from 'react-icons/fa'; // Import FaSyncAlt
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -41,15 +41,14 @@ function OrdersPage() {
     if (status === 'DECLINED' || status === 'CANCELLED') return "Cancelled";
     if (status === 'ACCEPTED' && diffMin <= 0) return "Delivered";
     if (diffMin <= 0) return "Delivered Soon";
-    
+
     return `${diffMin} min`;
   }, []);
-
 
   const fetchOrders = useCallback(async () => {
     setLoading(true);
     const token = localStorage.getItem('token');
-    const user = localStorage.getItem('user'); // This line will now find the 'user' object
+    const user = localStorage.getItem('user');
 
     if (!token || !user) {
       navigate("/login");
@@ -202,10 +201,9 @@ function OrdersPage() {
     }
   };
 
-
   return (
     <div className="orders-modern-container">
-      <ToastContainer /> {/* Placed ToastContainer here for global access */}
+      <ToastContainer />
       <div className="orders-modern-header">
         <h2 className="header-title">Your Orders</h2>
         <div className="header-buttons">
@@ -214,6 +212,10 @@ function OrdersPage() {
           </button>
           <button className="view-cart-btn" onClick={() => navigate("/user/cart")}>
             <FaClipboardList /> View Cart
+          </button>
+          {/* Refresh Button */}
+          <button className="refresh-orders-btn" onClick={fetchOrders} disabled={loading}>
+            <FaSyncAlt className={loading ? 'spinning' : ''} /> Refresh
           </button>
         </div>
       </div>

@@ -1,15 +1,37 @@
 /* ========== Global Reset & Typography ========== */
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html, body {
-  margin: 0;
-  padding: 0;
   overflow-x: hidden;
   font-family: 'Segoe UI', sans-serif;
   background-color: #fff;
   color: #111;
+  line-height: 1.6;
+}
+
+/* Reusable container for consistent content width */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Section headings */
+h2 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 700;
+}
+
+/* Common button style */
+button {
+  cursor: pointer;
 }
 
 /* ========== Hero Section ========== */
@@ -18,6 +40,10 @@ html, body {
   width: 100%;
   height: 100vh;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .hero-overlay {
@@ -43,6 +69,8 @@ html, body {
   color: #fff;
   font-size: 3.8rem;
   margin: 0;
+  font-weight: 800;
+  line-height: 1.1;
 }
 
 .brand {
@@ -54,6 +82,7 @@ html, body {
   color: #ccc;
   font-size: 1.2rem;
   margin-top: 15px;
+  font-weight: 300;
 }
 
 .hero-btn {
@@ -65,13 +94,25 @@ html, body {
   font-size: 1rem;
   border: none;
   border-radius: 8px;
-  cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(255, 77, 0, 0.3);
 }
 
 .hero-btn:hover {
   background-color: #e0a800;
-  box-shadow: 0 0 10px rgba(255, 193, 7, 0.6);
+  box-shadow: 0 0 15px rgba(255, 193, 7, 0.8);
+  transform: translateY(-2px);
+}
+
+.booking-success-message {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
 }
 
 /* ========== Booking Modal ========== */
@@ -91,22 +132,24 @@ html, body {
 .modal {
   background: white;
   padding: 30px;
-  border-radius: 8px;
+  border-radius: 10px;
   width: 90%;
   max-width: 500px;
   position: relative;
   animation: fadeIn 0.3s ease-out;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .modal-close-btn {
   position: absolute;
   top: 10px;
-  right: 10px;
+  right: 15px;
   background: none;
   border: none;
-  font-size: 2em;
+  font-size: 2.2em;
   cursor: pointer;
   color: #555;
+  transition: color 0.2s ease;
 }
 
 .modal-close-btn:hover {
@@ -118,10 +161,11 @@ html, body {
   color: #333;
   margin-bottom: 25px;
   font-size: 2em;
+  font-weight: 700;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   text-align: left;
 }
 
@@ -130,14 +174,22 @@ html, body {
   margin-bottom: 8px;
   font-weight: bold;
   color: #555;
+  font-size: 1.05em;
 }
 
 .form-group input {
   width: calc(100% - 20px);
   padding: 12px;
   border: 1px solid #ddd;
-  border-radius: 5px;
+  border-radius: 6px;
   font-size: 1em;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input:focus {
+  border-color: #ff4d00;
+  box-shadow: 0 0 0 3px rgba(255, 77, 0, 0.2);
+  outline: none;
 }
 
 .submit-booking-btn {
@@ -145,26 +197,17 @@ html, body {
   color: white;
   padding: 12px 25px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   font-size: 1.1em;
-  cursor: pointer;
+  font-weight: bold;
   width: 100%;
   margin-top: 20px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .submit-booking-btn:hover {
   background-color: #e0a800;
-}
-
-.booking-success-message {
-  margin-top: 20px;
-  padding: 15px;
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
-  border-radius: 5px;
-  font-weight: bold;
-  text-align: center;
+  transform: translateY(-1px);
 }
 
 /* ========== Animations ========== */
@@ -179,92 +222,848 @@ html, body {
   }
 }
 
-/* ========== Responsive ========== */
+/* ========== General Section Styles ========== */
+.about-us-section,
+.menu-section,
+.testimonials-section,
+.cta-section,
+.image-gallery-section,
+.features-section {
+  padding: 10px;
+  text-align: center;
+}
 
-/* Tablets and smaller laptops */
+.about-us-section {
+  background-color: #fcfcfc;
+}
+
+.menu-section {
+  background-color: #f0f0f0;
+}
+
+.testimonials-section {
+  background-color: #fcfcfc;
+}
+
+.cta-section {
+  background-color: #333;
+  color: white;
+  padding: 100px 0;
+}
+
+.image-gallery-section {
+  background-color: #f0f0f0;
+}
+
+.features-section {
+  background-color: #fcfcfc;
+}
+
+.cta-section h2 {
+  color: white;
+}
+
+/* About Us Section specific */
+.about-us-section p {
+  max-width: 900px;
+  margin: 0 auto;
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: #555;
+}
+
+/* ========== Menu Section specific ========== */
+.menu-items-grid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+  max-width: 1200px; 
+  margin: 40px auto;
+  gap: 30px; 
+  padding: 0 20px;
+}
+
+.menu-item {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-item:hover {
+  transform: translateY(-8px); /* Keep the attractive hover effect */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.menu-item img {
+  width: 100%;
+  height: 180px; /* Adjusted image height to fit better */
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
+}
+
+.menu-item-content {
+  padding: 20px; /* Padding for text content */
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.menu-item h3 {
+  font-size: 1.5rem; /* Adjusted font size */
+  color: #333;
+  margin: 0 0 8px;
+  font-weight: 700;
+}
+
+.menu-item p {
+  font-size: 0.95rem; /* Adjusted font size */
+  color: #777;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.view-menu-btn {
+  background-color: #ff4d00;
+  color: white;
+  padding: 10px 15px; /* Adjusted button padding */
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem; /* Adjusted font size */
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  align-self: center; /* Center button within the card */
+  width: 100%; /* Make button fill available width */
+  max-width: 200px;
+  
+}
+
+.view-menu-btn:hover {
+  background-color: #e0a800;
+  transform: translateY(-2px);
+}
+
+.view-all-menu-btn {
+  background-color: #e0a800;
+  color: white;
+  padding: 15px 40px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-top: 0px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.view-all-menu-btn:hover {
+    margin-top: 0px;
+  background-color: #ff4d00;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(202, 110, 71, 0.916);
+}
+
+
+/* Testimonials Section specific */
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.testimonial-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.testimonial-card p {
+  font-style: italic;
+  color: #555;
+  margin-bottom: 20px;
+  line-height: 1.7;
+  font-size: 1.05rem;
+}
+
+.testimonial-card h4 {
+  color: #ff4d00;
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* Call to Action Section specific */
+.cta-section button {
+  background-color: #ffde59;
+  color: #333;
+  padding: 18px 50px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  margin-top: 30px;
+  box-shadow: 0 5px 15px rgba(255, 222, 89, 0.4);
+}
+
+.cta-section button:hover {
+  background-color: #ffc107;
+  color: #222;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(255, 193, 7, 0.5);
+}
+
+/* Circular Image Gallery specific */
+.circle-img-grid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 40px;
+  margin-top: 50px;
+}
+
+.circle-img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 6px solid #ffde59;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  transition: transform 0.4s ease, border-color 0.4s ease;
+}
+
+.circle-img:hover {
+  transform: scale(1.1);
+  border-color: #ff4d00;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+/* Features Section specific */
+.features-section ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.features-section li {
+  background-color: #fff;
+  padding: 20px 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+  font-size: 1.15rem;
+  color: #444;
+  text-align: left;
+  width: 100%;
+  max-width: 600px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.features-section li::before {
+  content: '✓';
+  color: #12be09;
+  font-weight: bold;
+  font-size: 1.4em;
+  margin-right: 15px;
+}
+
+.features-section li:hover {
+  transform: translateX(10px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* ========== Footer ========== */
+.footer {
+  background-color: #333;
+  color: #f8f8f8;
+  padding: 40px 20px;
+  font-size: 0.95em;
+  border-top: 5px solid #ff5722;
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 30px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-left,
+.footer-middle,
+.footer-right {
+  flex: 1;
+  min-width: 220px;
+  padding: 10px;
+  text-align: left;
+}
+
+.footer-left h3 {
+  color: #ff5722;
+  font-size: 1.8em;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.footer-left p {
+  color: #bbb;
+  line-height: 1.5;
+}
+
+.footer-middle h4,
+.footer-right h4 {
+  color: #fff;
+  font-size: 1.2em;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.footer-middle ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-middle ul li {
+  margin-bottom: 10px;
+}
+
+.footer-middle ul li a {
+  color: #bbb;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  cursor: pointer;
+}
+
+.footer-middle ul li a:hover {
+  color: #ff5722;
+  text-decoration: underline;
+}
+
+.footer-right p {
+  margin-bottom: 10px;
+  color: #bbb;
+}
+
+.footer-right a {
+  color: #ff5722;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-right a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 20px;
+  color: #aaa;
+  font-size: 0.85em;
+}
+
+.footer-bottom span {
+  color: #ff5722;
+  font-weight: bold;
+}
+
+
+/* ========== Responsive Adjustments ========== */
+
+/* For tablets and smaller laptops (up to 992px) */
+@media (max-width: 992px) {
+  .hero-overlay {
+    padding-left: 40px;
+  }
+  .hero-title {
+    font-size: 3rem;
+  }
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+  .hero-btn {
+    padding: 10px 25px;
+  }
+
+  /* General sections */
+  .about-us-section,
+  .menu-section,
+  .testimonials-section,
+  .cta-section,
+  .image-gallery-section,
+  .features-section {
+    padding: 60px 0;
+  }
+  h2 {
+    font-size: 2.2rem;
+  }
+
+  /* Menu */
+  .menu-items-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* 2 columns for smaller tablets */
+    gap: 20px;
+    padding: 0 15px;
+  }
+  .menu-item img {
+    height: 160px;
+  }
+  .menu-item h3 {
+    font-size: 1.3rem;
+  }
+  .menu-item p {
+    font-size: 0.9rem;
+  }
+  .view-menu-btn {
+    font-size: 0.85rem;
+    padding: 8px 12px;
+  }
+  .view-all-menu-btn {
+    font-size: 1rem;
+    padding: 12px 30px;
+    margin-top: 40px;
+  }
+
+  /* Testimonials */
+  .testimonials-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+  }
+
+  /* CTA */
+  .cta-section button {
+    font-size: 1.2rem;
+    padding: 15px 40px;
+  }
+
+  /* Image Gallery */
+  .circle-img {
+    width: 160px;
+    height: 160px;
+    border-width: 5px;
+  }
+
+  /* Features */
+  .features-section li {
+    font-size: 1.05rem;
+    padding: 15px 25px;
+  }
+}
+
+/* For mobile phones (up to 768px and below) */
 @media (max-width: 768px) {
   .hero-overlay {
     padding: 0 20px;
     justify-content: center;
     text-align: center;
   }
-
   .hero-text {
-    padding: 0;
     max-width: 100%;
   }
-
   .hero-title {
-    font-size: 2.5rem;
-    line-height: 1.2;
+    font-size: 2.8rem;
   }
-
   .hero-subtitle {
     font-size: 1rem;
   }
-
   .hero-btn {
     font-size: 0.95rem;
-    padding: 10px 24px;
-    margin-top: 20px;
+    padding: 12px 28px;
+    margin-top: 25px;
   }
 
+  /* Modal */
   .modal {
     padding: 25px;
   }
-
   .modal h2 {
-    font-size: 1.7em;
+    font-size: 1.8em;
   }
-
   .form-group label {
+    font-size: 1em;
+  }
+  .form-group input {
+    padding: 10px;
     font-size: 0.95em;
   }
+  .submit-booking-btn {
+    font-size: 1.05em;
+    padding: 12px 25px;
+  }
 
-  .form-group input {
-    font-size: 1em;
+  /* General sections */
+  .about-us-section,
+  .menu-section,
+  .testimonials-section,
+  .cta-section,
+  .image-gallery-section,
+  .features-section {
+    padding: 40px 0;
+  }
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 25px;
+  }
+
+  /* About Us */
+  .about-us-section p {
+    font-size: 1.05rem;
+    padding: 0 10px;
+  }
+
+  /* Menu - Single column on mobile */
+  .menu-items-grid {
+    grid-template-columns: 1fr; /* Force single column */
+    max-width: 350px; /* Constrain overall width of the grid */
+    margin: 30px auto; /* Center the single column */
+    gap: 20px;
+    padding: 0 15px;
+  }
+  .menu-item img {
+    height: 180px;
+  }
+  .menu-item h3 {
+    font-size: 1.4rem;
+  }
+  .menu-item p {
+    font-size: 0.9rem;
+  }
+  .view-menu-btn {
+    font-size: 0.9rem;
+    padding: 10px 15px;
+    max-width: 250px; /* Adjust button width */
+  }
+  .view-all-menu-btn {
+    font-size: 1rem;
+    padding: 12px 30px;
+    margin-top: 30px;
+  }
+
+  /* Testimonials */
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 0 15px;
+  }
+  .testimonial-card {
+    padding: 25px;
+  }
+
+  /* CTA */
+  .cta-section button {
+    font-size: 1.1rem;
+    padding: 12px 30px;
+  }
+
+  /* Image Gallery */
+  .circle-img-grid {
+    gap: 25px;
+  }
+  .circle-img {
+    width: 130px;
+    height: 130px;
+    border-width: 4px;
+  }
+
+  /* Features */
+  .features-section ul {
+    gap: 15px;
+    padding: 0 15px;
+  }
+  .features-section li {
+    font-size: 1rem;
+    padding: 15px 20px;
+  }
+  .features-section li::before {
+    font-size: 1.2em;
+    margin-right: 10px;
+  }
+
+  /* Footer */
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+  }
+  .footer-left,
+  .footer-middle,
+  .footer-right {
+    min-width: unset;
+    width: 100%;
+    margin-bottom: 25px;
+    padding: 0 20px;
+    text-align: center;
+  }
+  .footer-middle ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 15px;
+  }
+  .footer-middle ul li {
+    margin-bottom: 0;
   }
 }
 
-/* Mobile phones */
+/* For small mobile phones (up to 480px) */
 @media (max-width: 480px) {
   .hero-title {
     font-size: 2.2rem;
   }
-
   .hero-subtitle {
-    font-size: 0.95rem;
-  }
-
-  .hero-btn {
     font-size: 0.9rem;
+  }
+  .hero-btn {
+    font-size: 0.85rem;
     padding: 10px 20px;
   }
 
+  /* Modal */
   .modal {
     padding: 20px;
   }
-
   .modal h2 {
-    font-size: 1.5em;
+    font-size: 1.6em;
   }
-
   .form-group label {
     font-size: 0.9em;
   }
-
   .form-group input {
-    padding: 10px;
+    padding: 8px;
     font-size: 0.9em;
   }
-
   .submit-booking-btn {
-    font-size: 1em;
+    font-size: 0.95em;
     padding: 10px 20px;
   }
 
-  .booking-success-message {
-    font-size: 0.95em;
+  /* General sections */
+  .about-us-section,
+  .menu-section,
+  .testimonials-section,
+  .cta-section,
+  .image-gallery-section,
+  .features-section {
+    padding: 30px 0;
+  }
+  h2 {
+    font-size: 1.8rem;
+  }
+
+  /* About Us */
+  .about-us-section p {
+    font-size: 0.95rem;
+  }
+
+  /* Menu - Even smaller single column */
+  .menu-items-grid {
+    max-width: 300px;
+    margin: 20px auto;
+    gap: 15px;
+    padding: 0 10px;
+  }
+  .menu-item img {
+    height: 160px;
+  }
+  .menu-item h3 {
+    font-size: 1.3rem;
+  }
+  .menu-item p {
+    font-size: 0.9rem;
+  }
+  .view-menu-btn {
+    font-size: 0.9rem;
+    padding: 10px 15px;
+    max-width: 200px;
+  }
+  .view-all-menu-btn {
+    font-size: 0.95rem;
+    padding: 10px 25px;
+    margin-top: 25px;
+  }
+
+  /* Testimonials */
+  .testimonial-card p {
+    font-size: 0.95rem;
+  }
+  .testimonial-card h4 {
+    font-size: 1rem;
+  }
+
+  /* CTA */
+  .cta-section button {
+    font-size: 1rem;
+    padding: 10px 25px;
+  }
+
+  /* Image Gallery */
+  .circle-img {
+    width: 100px;
+    height: 100px;
+    border-width: 3px;
+  }
+
+  /* Features */
+  .features-section li {
+    font-size: 0.95rem;
+    padding: 12px 18px;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 25px 15px;
+  }
+  .footer-left h3 {
+    font-size: 1.5em;
+  }
+  .footer-middle h4,
+  .footer-right h4 {
+    font-size: 1.05em;
+  }
+  .footer-left p,
+  .footer-middle ul li a,
+  .footer-right p,
+  .footer-bottom p {
+    font-size: 0.8em;
+  }
+  .footer-middle ul {
+    gap: 8px 10px;
+  }
+}
+
+/* For very small mobile phones (up to 375px) */
+@media (max-width: 375px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+  .hero-subtitle {
+    font-size: 0.85rem;
+  }
+  .hero-btn {
+    font-size: 0.8rem;
+    padding: 8px 15px;
+  }
+
+  /* Modal */
+  .modal h2 {
+    font-size: 1.4em;
+  }
+  .form-group label {
+    font-size: 0.85em;
+  }
+  .form-group input {
+    padding: 6px;
+    font-size: 0.85em;
+  }
+  .submit-booking-btn {
+    font-size: 0.9em;
+    padding: 8px 18px;
+  }
+
+  /* General sections */
+  h2 {
+    font-size: 1.6rem;
+  }
+
+  /* Menu - Smallest single column */
+  .menu-items-grid {
+    max-width: 280px;
+    gap: 10px;
+  }
+  .menu-item img {
+    height: 140px;
+  }
+  .menu-item h3 {
+    font-size: 1.2rem;
+  }
+  .menu-item p {
+    font-size: 0.85rem;
+  }
+  .view-menu-btn {
+    font-size: 0.8rem;
+    padding: 8px 12px;
+    max-width: 180px;
+  }
+  .view-all-menu-btn {
+    font-size: 0.85rem;
+    padding: 7px 18px;
+  }
+
+  /* Testimonials */
+  .testimonial-card {
     padding: 12px;
+  }
+  .testimonial-card p {
+    font-size: 0.9rem;
+  }
+  .testimonial-card h4 {
+    font-size: 0.9rem;
+  }
+
+  /* CTA */
+  .cta-section button {
+    font-size: 0.9rem;
+    padding: 8px 18px;
+  }
+
+  /* Image Gallery */
+  .circle-img {
+    width: 90px;
+    height: 90px;
+    border-width: 2px;
+  }
+
+  /* Features */
+  .features-section li {
+    font-size: 0.9rem;
+    padding: 10px 15px;
+  }
+  .features-section li::before {
+    font-size: 1em;
+    margin-right: 8px;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 20px 10px;
+  }
+  .footer-left h3 {
+    font-size: 1.3em;
+  }
+  .footer-middle h4,
+  .footer-right h4 {
+    font-size: 0.95em;
+  }
+  .footer-left p,
+  .footer-middle ul li a,
+  .footer-right p,
+  .footer-bottom p {
+    font-size: 0.75em;
+  }
+  .footer-middle ul {
+    gap: 5px 8px;
   }
 }

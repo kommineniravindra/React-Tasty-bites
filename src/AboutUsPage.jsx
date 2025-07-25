@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import './AboutUsPage.css';
+// import Navbar from './Navbar'; // Uncomment if you want Navbar directly in this component
 
 const AboutUsPage = () => {
   const navigate = useNavigate();
@@ -12,6 +13,8 @@ const AboutUsPage = () => {
 
   return (
     <div className="about-us-container">
+      {/* {<Navbar />} Uncomment if you want Navbar directly in this component */}
+
       <header className="about-us-header">
         <h1>About Tasty Bites App</h1>
         <p>Your seamless journey to delicious food, right at your fingertips.</p>
@@ -19,7 +22,7 @@ const AboutUsPage = () => {
 
       <div className="menu-button-container">
         <button onClick={handleBackToMenuClick} className="nav-text-btn">
-          <FaArrowLeft className="nav-icon" /> Back to Menu
+          <FaArrowLeft className="nav-icon" /> Back to Home
         </button>
       </div>
 
@@ -75,7 +78,7 @@ const AboutUsPage = () => {
         <h2>Our Main Office</h2>
         <div className="map-container">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15229.412497805166!2d78.44754759999999!3d17.385044!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcbb5d37617c059%3A0x7387431e67b2d55!2sHyderabad%2C%20Telangana!5e0!3m2!1sen!2sin!4v1701388800000!5m2!1sen!2sin"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15226.79092892973!2d78.36952705!3d17.426211849999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc910041d8e6a17%3A0xc3911c7512d7c588!2sHitec%20City%2C%20Hyderabad%2C%20Telangana!5e0!3m2!1sen!2sin!4v1701350000000!5m2!1sen!2sin" // Updated to a general Hitec City Hyderabad embed URL
             width="600"
             height="450"
             style={{ border: 0 }}

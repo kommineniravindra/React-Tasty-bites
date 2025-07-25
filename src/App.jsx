@@ -16,18 +16,28 @@ import UpdateProduct from './UpdateProduct';
 import CartPage from './CartPage';
 import Orders from './OrdersPage';
 import AboutUsPage from './AboutUsPage';
-
+import Navbar from './Navbar'; // Import Navbar
 
 import { CartProvider } from './CartContext';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css'; 
 
 function App() {
   return (
     <CartProvider>
       <Router>
-        {/* Toast should be outside <Routes> */}
-        <ToastContainer position="top-right" autoClose={1500} theme="light" />
+        <ToastContainer
+          position="top-right"
+          autoClose={1500} // milliseconds
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
 
         <Routes>
           {/* Public Routes */}
@@ -36,22 +46,29 @@ function App() {
           <Route path="/login" element={<Login />} />
 
           {/* User Protected Routes */}
-          <Route path="/user/home" element={<PrivateRoute role="USER"><UserHome /></PrivateRoute>} />
-          <Route path="/user/veg" element={<PrivateRoute role="USER"><Veg /></PrivateRoute>} />
-          <Route path="/user/nonveg" element={<PrivateRoute role="USER"><NonVeg /></PrivateRoute>} />
-          <Route path="/user/snacks" element={<PrivateRoute role="USER"><Snacks /></PrivateRoute>} />
-          <Route path="/user/drinks" element={<PrivateRoute role="USER"><Drinks /></PrivateRoute>} />
-          <Route path="/user/cart" element={<PrivateRoute role="USER"><CartPage /></PrivateRoute>} />
-          <Route path="/user/orders" element={<PrivateRoute role="USER"><Orders /></PrivateRoute>} />
-          <Route path="/about-us" element={<PrivateRoute role="USER"><AboutUsPage /></PrivateRoute>} />
-          {/* <Route path="/contact-us" element={<PrivateRoute role="USER"><ContactUs /></PrivateRoute>} /> */}
-
+          {/* Apply PrivateRoute as a wrapper for ALL user-level routes */}
+          <Route element={<PrivateRoute role="USER" />}>
+            {/* Now, within the protected user routes, apply NavbarWrapper as a layout */}
+            <Route element={<NavbarWrapper />}>
+              <Route path="/user/home" element={<UserHome />} />
+              <Route path="/user/veg" element={<Veg />} />
+              <Route path="/user/nonveg" element={<NonVeg />} />
+              <Route path="/user/snacks" element={<Snacks />} />
+              <Route path="/user/drinks" element={<Drinks />} />
+              <Route path="/user/cart" element={<CartPage />} />
+              <Route path="/user/orders" element={<Orders />} />
+              <Route path="/about-us" element={<AboutUsPage />} />
+            </Route>
+          </Route>
 
           {/* Admin Protected Routes */}
-          <Route path="/admin/dashboard" element={<PrivateRoute role="ADMIN"><AdminDashboard /></PrivateRoute>} />
-          <Route path="/admin/add-product" element={<PrivateRoute role="ADMIN"><AddProduct /></PrivateRoute>} />
-          <Route path="/admin/view-products" element={<PrivateRoute role="ADMIN"><ViewProducts /></PrivateRoute>} />
-          <Route path="/admin/update/:id" element={<PrivateRoute role="ADMIN"><UpdateProduct /></PrivateRoute>} />
+          <Route element={<PrivateRoute role="ADMIN" />}>
+            {/* Admin routes might not need the user Navbar */}
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/add-product" element={<AddProduct />} />
+            <Route path="/admin/view-products" element={<ViewProducts />} />
+            <Route path="/admin/update/:id" element={<UpdateProduct />} />
+          </Route>
 
           {/* Fallback */}
           <Route path="*" element={<h2>404 Page Not Found</h2>} />
@@ -60,5 +77,17 @@ function App() {
     </CartProvider>
   );
 }
+
+// NavbarWrapper component
+import { Outlet } from 'react-router-dom';
+
+const NavbarWrapper = () => {
+  return (
+    <>
+      <Navbar />
+      <Outlet /> {/* This is essential: Renders the matched child route component */}
+    </>
+  );
+};
 
 export default App;

@@ -3,10 +3,12 @@ import axios from 'axios';
 import './Veg.css';
 import { useCart } from './CartContext';
 import { RingLoader } from 'react-spinners';
-
 import Navbar from './Navbar';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify'; // Import toast
 
 function Veg() {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedRanges, setSelectedRanges] = useState(['all']);
@@ -95,6 +97,11 @@ function Veg() {
     setSelectedRanges(['all']);
   };
 
+  const handleAddToCartClick = (product) => {
+    addToCart(product);
+    toast.success(`${product.name} added to cart!`); // Show success toast
+  };
+
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentItems = filteredProducts.slice(indexOfFirst, indexOfLast);
@@ -165,7 +172,7 @@ function Veg() {
                   />
                   <h4>{product.name}</h4>
                   <p>₹{product.price}</p>
-                  <button onClick={() => addToCart(product)}>Add to Cart</button>
+                  <button onClick={() => handleAddToCartClick(product)}>Add to Cart</button> {/* Use the new handler */}
                 </div>
               ))}
             </div>
@@ -186,6 +193,7 @@ function Veg() {
           </>
         )}
       </div>
+
       <footer className="footer">
         <div className="footer-content">
           <div className="footer-left">
@@ -196,7 +204,11 @@ function Veg() {
           <div className="footer-middle">
             <h4>Explore</h4>
             <ul>
-              <li><a href="#home">Home</a></li>
+              <li><a onClick={() => navigate('/user/home')}>Home</a></li>
+              <li><a onClick={() => navigate('/user/veg')}>Veg</a></li>
+              <li><a onClick={() => navigate('/user/nonveg')}>Non-Veg</a></li>
+              <li><a onClick={() => navigate('/user/snacks')}>Snacks</a></li>
+              <li><a onClick={() => navigate('/user/drinks')}>Drinks</a></li>
             </ul>
           </div>
 

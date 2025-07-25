@@ -1,460 +1,4 @@
-/* Prevent unwanted horizontal scroll */
-body, html {
-    overflow-x: hidden;
-    background-color: #fff; /* Global white background */
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', sans-serif;
-    color: #111; /* Default text color */
-}
-
-/* Hero Section */
-.hero-section {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-}
-
-.slider {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    overflow: hidden;
-}
-
-.slide {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-position: center;
-    background-size: cover;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-}
-
-.slide.active {
-    opacity: 1;
-    z-index: 1;
-}
-
-/* Black overlay on slider */
-.hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 2;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9));
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding-left: 80px;
-}
-
-.hero-text {
-    max-width: 650px;
-    text-align: left;
-    animation: fadeInUp 1s ease forwards;
-}
-
-.hero-title {
-    color: #fff;
-    font-size: 3.8rem;
-    margin: 0;
-    animation: fadeInDown 1s ease forwards;
-}
-
-.brand {
-    color: #ffde59;
-    font-weight: bold;
-}
-
-.hero-subtitle {
-    color: #ccc;
-    font-size: 1.2rem;
-    margin-top: 15px;
-    animation: fadeInUp 1.2s ease forwards;
-}
-
-.hero-btn {
-    background-color: #ff4d00;
-    color: #ffffff;
-    padding: 12px 30px;
-    margin-top: 30px;
-    font-weight: bold;
-    font-size: 1rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.hero-btn:hover {
-    background-color: #e0a800;
-    color: white;
-    box-shadow: 0 0 10px rgba(255, 193, 7, 0.6);
-}
-
-/* Food Sections */
-.food-section {
-    padding: 40px 20px;
-    background-color: #fff;
-    color: #111; /* Dark text for light bg */
-}
-
-.section-title {
-    text-align: center;
-    color: #ff4d00;
-    font-size: 2.4rem;
-    font-weight: bold;
-    margin-bottom: 30px;
-}
-
-/* Card Grid (Reusable if needed) */
-.card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 30px;
-    padding: 0 20px;
-}
-
-/* Footer Styles */
-.footer {
-    background-color: #121212;
-    color: #e0e0e0;
-    padding: 40px 20px 20px;
-    font-size: 14px;
-    font-family: 'Segoe UI', sans-serif;
-    border-top: 2px solid #ffcc00;
-    margin-top: 60px;
-}
-
-.footer-content {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    max-width: 1200px;
-    margin: auto;
-    padding-bottom: 25px;
-    border-bottom: 1px solid #2c2c2c;
-}
-
-.footer-left,
-.footer-middle,
-.footer-right {
-    flex: 1;
-    min-width: 220px;
-    margin-bottom: 20px;
-}
-
-.footer-left h3 {
-    color: #ffcc00;
-    margin-bottom: 12px;
-    font-size: 20px;
-}
-
-.footer-left p {
-    color: #ccc;
-    font-size: 14px;
-    line-height: 1.6;
-}
-
-.footer-middle h4,
-.footer-right h4 {
-    color: #ffcc00;
-    margin-bottom: 10px;
-    font-size: 16px;
-}
-
-.footer-middle ul {
-    list-style: none;
-    padding: 0;
-}
-
-.footer-middle ul li {
-    margin-bottom: 8px;
-}
-
-.footer-middle ul li a {
-    color: #bbbbbb;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.footer-middle ul li a:hover {
-    color: #ffffff;
-    text-decoration: underline;
-}
-
-.footer-right p {
-    font-size: 14px;
-    margin: 6px 0;
-    color: #bbbbbb;
-}
-
-.footer-right a {
-    color: #ffcc00;
-    text-decoration: none;
-}
-
-.footer-right a:hover {
-    text-decoration: underline;
-}
-
-.footer-bottom {
-    text-align: center;
-    color: #888;
-    margin-top: 25px;
-    font-size: 13px;
-}
-
-.footer-bottom span {
-    color: #ffcc00;
-    font-weight: 600;
-}
-
-
-/* New styles for Booking Modal */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* High z-index to cover everything */
-}
-
-.modal {
-    background: white;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    width: 90%;
-    max-width: 500px;
-    position: relative;
-    animation: fadeIn 0.3s ease-out;
-}
-
-.modal-close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 2em;
-    cursor: pointer;
-    color: #555;
-    transition: color 0.3s ease;
-}
-
-.modal-close-btn:hover {
-    color: #ff4d00; /* Matching existing brand color */
-}
-
-.modal h2 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 25px;
-    font-size: 2em;
-}
-
-.form-group {
-    margin-bottom: 15px;
-    text-align: left;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #555;
-}
-
-.form-group input[type="text"],
-.form-group input[type="date"],
-.form-group input[type="time"],
-.form-group input[type="number"] {
-    width: calc(100% - 20px);
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1em;
-    box-sizing: border-box; /* Include padding in width */
-}
-
-.submit-booking-btn {
-    background-color: #ff4d00; /* Matching existing brand color */
-    color: white;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 5px;
-    font-size: 1.1em;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    display: block;
-    width: 100%;
-    margin-top: 20px;
-}
-
-.submit-booking-btn:hover {
-    background-color: #e0a800; /* Matching existing hover color */
-}
-
-.booking-success-message {
-    margin-top: 20px;
-    padding: 15px;
-    background-color: #d4edda; /* Light green for success */
-    color: #155724; /* Dark green text */
-    border: 1px solid #c3e6cb;
-    border-radius: 5px;
-    font-weight: bold;
-    text-align: center;
-    animation: fadeIn 0.5s ease-out;
-}
-
-/* Animations */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .footer-content {
-        flex-direction: column;
-        text-align: center;
-        gap: 30px;
-    }
-
-    .hero-title {
-        font-size: 2.5rem;
-    }
-
-    .hero-text {
-        padding-right: 20px;
-    }
-
-    .hero-overlay {
-        padding-left: 30px;
-        justify-content: center;
-        text-align: center;
-    }
-}
-/* ============= MOBILE RESPONSIVE ============= */
-
-/* Medium screens: tablets and smaller laptops */
-@media (max-width: 768px) {
-    .hero-overlay {
-        padding: 0 20px;
-        justify-content: center;
-        text-align: center;
-    }
-
-    .hero-text {
-        padding: 0;
-        max-width: 100%;
-    }
-
-    .hero-title {
-        font-size: 2.6rem;
-        line-height: 1.2;
-    }
-
-    .hero-subtitle {
-        font-size: 1rem;
-        margin-top: 10px;
-    }
-
-    .hero-btn {
-        font-size: 0.95rem;
-        padding: 10px 24px;
-        margin-top: 20px;
-    }
-
-    .food-section {
-        padding: 30px 15px;
-    }
-
-    .section-title {
-        font-size: 1.8rem;
-        margin-bottom: 20px;
-    }
-
-    .card-grid {
-        gap: 20px;
-        padding: 0;
-    }
-}
-
-/* Small screens: mobile phones */
-@media (max-width: 480px) {
-    .hero-title {
-        font-size: 2.2rem;
-    }
-
-    .hero-subtitle {
-        font-size: 0.95rem;
-    }
-
-    .hero-btn {
-        font-size: 0.9rem;
-        padding: 10px 20px;
-    }
-
-    .footer {
-        font-size: 0.8rem;
-        padding: 15px 10px;
-    }
-
-    .section-title {
-        font-size: 1.6rem;
-    }
-
-    .card-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-
-    /* Modal responsiveness for small screens */
-    .modal {
-        padding: 20px;
-    }
-
-    .modal h2 {
-        font-size: 1.5em;
-        margin-bottom: 15px;
-    }
-
-    .form-group label {
-        font-size: 0.9em;
-    }
-
-    .form-group input {
-        padding: 10px;
-        font-size: 0.9em;
-    }
-
-    .submit-booking-btn {
-        padding: 10px 20px;
-        font-size: 1em;
-    }
-}
-
-/* Prevent horizontal overflow globally */
+/* ========== Global Reset & Typography ========== */
 * {
   box-sizing: border-box;
 }
@@ -463,5 +7,264 @@ html, body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #fff;
+  color: #111;
+}
+
+/* ========== Hero Section ========== */
+.hero-section {
+  position: relative;
   width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9));
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 80px;
+}
+
+.hero-text {
+  max-width: 650px;
+  text-align: left;
+}
+
+.hero-title {
+  color: #fff;
+  font-size: 3.8rem;
+  margin: 0;
+}
+
+.brand {
+  color: #ffde59;
+  font-weight: bold;
+}
+
+.hero-subtitle {
+  color: #ccc;
+  font-size: 1.2rem;
+  margin-top: 15px;
+}
+
+.hero-btn {
+  background-color: #ff4d00;
+  color: #ffffff;
+  padding: 12px 30px;
+  margin-top: 30px;
+  font-weight: bold;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hero-btn:hover {
+  background-color: #e0a800;
+  box-shadow: 0 0 10px rgba(255, 193, 7, 0.6);
+}
+
+/* ========== Booking Modal ========== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 2em;
+  cursor: pointer;
+  color: #555;
+}
+
+.modal-close-btn:hover {
+  color: #ff4d00;
+}
+
+.modal h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 25px;
+  font-size: 2em;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
+}
+
+.form-group input {
+  width: calc(100% - 20px);
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+.submit-booking-btn {
+  background-color: #ff4d00;
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1em;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.submit-booking-btn:hover {
+  background-color: #e0a800;
+}
+
+.booking-success-message {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* ========== Animations ========== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========== Responsive ========== */
+
+/* Tablets and smaller laptops */
+@media (max-width: 768px) {
+  .hero-overlay {
+    padding: 0 20px;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .hero-text {
+    padding: 0;
+    max-width: 100%;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+    line-height: 1.2;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .hero-btn {
+    font-size: 0.95rem;
+    padding: 10px 24px;
+    margin-top: 20px;
+  }
+
+  .modal {
+    padding: 25px;
+  }
+
+  .modal h2 {
+    font-size: 1.7em;
+  }
+
+  .form-group label {
+    font-size: 0.95em;
+  }
+
+  .form-group input {
+    font-size: 1em;
+  }
+}
+
+/* Mobile phones */
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 2.2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .hero-btn {
+    font-size: 0.9rem;
+    padding: 10px 20px;
+  }
+
+  .modal {
+    padding: 20px;
+  }
+
+  .modal h2 {
+    font-size: 1.5em;
+  }
+
+  .form-group label {
+    font-size: 0.9em;
+  }
+
+  .form-group input {
+    padding: 10px;
+    font-size: 0.9em;
+  }
+
+  .submit-booking-btn {
+    font-size: 1em;
+    padding: 10px 20px;
+  }
+
+  .booking-success-message {
+    font-size: 0.95em;
+    padding: 12px;
+  }
 }

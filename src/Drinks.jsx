@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './Veg.css'; // Reusing existing styles
+import './Veg.css';
 import { useCart } from './CartContext';
-// Import the spinner component
-import { BeatLoader } from 'react-spinners'; // Using BeatLoader for Drinks!
+import { BeatLoader } from 'react-spinners';
 
 function Drinks() {
   const [products, setProducts] = useState([]);
@@ -12,18 +11,18 @@ function Drinks() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [refreshTrigger, setRefreshTrigger] = useState(0); // New state for refresh button
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const itemsPerPage = 8;
 
   const { addToCart } = useCart();
 
   useEffect(() => {
-    const MIN_LOAD_TIME = 10000; // 10 seconds in milliseconds
-    let startTime; // Declare startTime here
+    const MIN_LOAD_TIME = 1000;
+    let startTime;
 
     const fetchData = async () => {
-      setLoading(true); // Ensure loading is true when starting fetch
-      startTime = Date.now(); // Set startTime right before the async operation
+      setLoading(true);
+      startTime = Date.now();
 
       try {
         const token = localStorage.getItem('token');
@@ -40,27 +39,25 @@ function Drinks() {
       } catch (err) {
         console.error(err);
         setError('Failed to load drinks items');
-        setProducts([]); // Clear products on error
-        setFilteredProducts([]); // Clear filtered products on error
+        setProducts([]);
+        setFilteredProducts([]);
       } finally {
         const endTime = Date.now();
         const elapsedTime = endTime - startTime;
         const remainingTime = MIN_LOAD_TIME - elapsedTime;
 
         if (remainingTime > 0) {
-          // If less than MIN_LOAD_TIME has passed, wait for the remainder
           setTimeout(() => {
             setLoading(false);
           }, remainingTime);
         } else {
-          // If MIN_LOAD_TIME has already passed, set loading to false immediately
           setLoading(false);
         }
       }
     };
 
     fetchData();
-  }, [refreshTrigger]); // Add refreshTrigger to dependency array to re-run on refresh
+  }, [refreshTrigger]);
 
   const handleCheckboxChange = (range) => {
     if (range === 'all') {
@@ -77,9 +74,6 @@ function Drinks() {
   };
 
   useEffect(() => {
-    // This useEffect filters products when selectedRanges or products change
-    // It does NOT affect the minimum load time for the initial fetch,
-    // nor does it trigger a full re-fetch from the API.
     if (selectedRanges.includes('all')) {
       setFilteredProducts(products);
       return;
@@ -95,13 +89,12 @@ function Drinks() {
     );
 
     setFilteredProducts(filtered);
-  }, [selectedRanges, products]); // Depend on selectedRanges and products
+  }, [selectedRanges, products]);
 
-  // Function to handle the refresh button click
   const handleRefresh = () => {
-    setRefreshTrigger(prev => prev + 1); // Increment to trigger the useEffect
-    setCurrentPage(1); // Reset pagination on refresh
-    setSelectedRanges(['all']); // Optionally reset filters to 'all' on refresh
+    setRefreshTrigger(prev => prev + 1);
+    setCurrentPage(1);
+    setSelectedRanges(['all']);
   };
 
   const indexOfLast = currentPage * itemsPerPage;
@@ -110,17 +103,15 @@ function Drinks() {
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
   return (
-    <div className="veg-section"> {/* Reusing veg-section class for layout */}
+    <div className="veg-section">
       <h3 className="section-title">🥤 Drinks</h3>
 
-      {/* Refresh Button - positioned on the right via CSS */}
       <div className="refresh-button-container">
         <button className="refresh-button" onClick={handleRefresh} disabled={loading}>
           {loading ? 'Refreshing...' : 'Refresh'}
         </button>
       </div>
 
-      {/* ✅ Filter Checkboxes */}
       <div className="checkbox-filter">
         <label>
           <input
@@ -154,8 +145,7 @@ function Drinks() {
 
       {loading ? (
         <div className="spinner-container">
-          {/* Using BeatLoader for Drinks */}
-          <BeatLoader color="#00BFFF" loading={loading} size={15} margin={5} /> {/* Sky Blue for drinks */}
+          <BeatLoader color="#00BFFF" loading={loading} size={15} margin={5} />
           <p className="status-message">Pouring up some refreshing drinks...</p>
         </div>
       ) : error ? (

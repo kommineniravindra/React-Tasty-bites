@@ -3,10 +3,10 @@ import './OrdersPage.css';
 import { useNavigate } from 'react-router-dom';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import axios from 'axios';
 import { FaChevronDown, FaChevronUp, FaFileInvoice, FaHome, FaClipboardList } from 'react-icons/fa';
-
-// --- REMOVED NAVBAR IMPORT ---
-// import Navbar from './Navbar'; // No longer needed if Navbar is not rendered here
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function OrdersPage() {
   const [orders, setOrders] = useState([]);
@@ -18,94 +18,103 @@ function OrdersPage() {
 
   const navigate = useNavigate();
 
-  const getOrderStage = useCallback((orderId) => {
-    const stages = ["Pending", "Completed", "Cancelled"];
-    return stages[orderId % 3];
+  const getOrderStage = useCallback((status) => {
+    switch (status) {
+      case "PENDING": return "Pending";
+      case "ACCEPTED": return "Completed";
+      case "DECLINED": return "Cancelled";
+      default: return "Unknown";
+    }
   }, []);
 
   const deliveryPartners = ["Swiggy", "Zomato", "TastyExpress"];
   const getDeliveryPartner = useCallback((orderId) => deliveryPartners[orderId % deliveryPartners.length], []);
 
-  const getETA = useCallback((orderDate) => {
+  const getETA = useCallback((orderDate, status) => {
     const now = new Date();
     const placedTime = new Date(orderDate);
     const etaMinutes = 45;
     const deliveryTime = new Date(placedTime.getTime() + etaMinutes * 60000);
     const diffMs = deliveryTime - now;
     const diffMin = Math.max(0, Math.ceil(diffMs / 60000));
-    if (diffMin <= 0) return "Delivered";
+
+    if (status === 'DECLINED' || status === 'CANCELLED') return "Cancelled";
+    if (status === 'ACCEPTED' && diffMin <= 0) return "Delivered";
+    if (diffMin <= 0) return "Delivered Soon";
+    
     return `${diffMin} min`;
   }, []);
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      setLoading(true);
-      const token = localStorage.getItem('token');
-      const user = localStorage.getItem('user');
 
-      if (!token || !user) {
-        alert("Login expired. Please login again.");
-        navigate("/login");
-        return;
-      }
+  const fetchOrders = useCallback(async () => {
+    setLoading(true);
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user'); // This line will now find the 'user' object
+
+    if (!token || !user) {
+      navigate("/login");
+      toast.error("Login expired. Please log in again.", { position: "top-center" });
+      return;
+    }
+
+    try {
+      const res = await fetch("https://spring-apigateway.onrender.com/api/orders/my", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) throw new Error("Backend fetch failed");
+
+      const data = await res.json();
+
+      if (!Array.isArray(data)) throw new Error("Invalid orders format");
+
+      const processedOrders = data.map(order => ({
+        ...order,
+        orderStage: getOrderStage(order.status),
+        deliveryPartner: getDeliveryPartner(order.id),
+        eta: getETA(order.orderDate, order.status),
+        paymentMode: ["Cash", "Credit Card", "UPI"][order.id % 3]
+      }));
+
+      setOrders(processedOrders.reverse());
+      localStorage.setItem("orders", JSON.stringify(processedOrders));
+      setIsFallback(false);
+    } catch (err) {
+      console.warn("⚠️ Backend fetch failed, using fallback:", err);
 
       try {
-        const res = await fetch("https://spring-apigateway.onrender.com/api/orders/my", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const raw = localStorage.getItem("orders");
+        const parsed = JSON.parse(raw);
 
-        if (!res.ok) throw new Error("Backend fetch failed");
-
-        const data = await res.json();
-
-        if (!Array.isArray(data)) throw new Error("Invalid orders format");
-
-        const processedOrders = data.map(order => ({
-          ...order,
-          orderStage: getOrderStage(order.id),
-          deliveryPartner: getDeliveryPartner(order.id),
-          eta: getETA(order.orderDate),
-          paymentMode: ["Cash", "Credit Card", "UPI"][order.id % 3]
-        }));
-
-        setOrders(processedOrders.reverse());
-        localStorage.setItem("orders", JSON.stringify(processedOrders));
-        setIsFallback(false);
-      } catch (err) {
-        console.warn("⚠️ Backend fetch failed, using fallback:", err);
-
-        try {
-          const raw = localStorage.getItem("orders");
-          const parsed = JSON.parse(raw);
-
-          if (Array.isArray(parsed)) {
-            const processedFallback = parsed.map(order => ({
-              ...order,
-              orderStage: getOrderStage(order.id),
-              deliveryPartner: getDeliveryPartner(order.id),
-              eta: getETA(order.orderDate),
-              paymentMode: ["Cash", "Credit Card", "UPI"][order.id % 3]
-            }));
-            setOrders(processedFallback.reverse());
-            setIsFallback(true);
-          } else {
-            throw new Error("Fallback data invalid");
-          }
-        } catch (e) {
-          console.error("❌ Fallback load failed:", e);
-          localStorage.removeItem("orders");
-          setOrders([]);
+        if (Array.isArray(parsed)) {
+          const processedFallback = parsed.map(order => ({
+            ...order,
+            orderStage: getOrderStage(order.status),
+            deliveryPartner: getDeliveryPartner(order.id),
+            eta: getETA(order.orderDate, order.status),
+            paymentMode: ["Cash", "Credit Card", "UPI"][order.id % 3]
+          }));
+          setOrders(processedFallback.reverse());
           setIsFallback(true);
+        } else {
+          throw new Error("Fallback data invalid");
         }
-      } finally {
-        setLoading(false);
+      } catch (e) {
+        console.error("❌ Fallback load failed:", e);
+        localStorage.removeItem("orders");
+        setOrders([]);
+        setIsFallback(true);
       }
-    };
-
-    fetchOrders();
+    } finally {
+      setLoading(false);
+    }
   }, [navigate, getOrderStage, getDeliveryPartner, getETA]);
+
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
 
   useEffect(() => {
     if (activeTab === 'all') {
@@ -173,9 +182,30 @@ function OrdersPage() {
     setExpandedOrderId(expandedOrderId === orderId ? null : orderId);
   };
 
+  const handleCancelOrder = async (orderId) => {
+    const confirmCancel = window.confirm("Are you sure you want to cancel this order?");
+    if (!confirmCancel) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      await axios.put(`https://spring-apigateway.onrender.com/api/orders/${orderId}/status`,
+        { status: "DECLINED" },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      toast.success("Order cancelled successfully!", { position: "top-center" });
+      fetchOrders();
+    } catch (error) {
+      console.error("Failed to cancel order:", error);
+      toast.error("Failed to cancel order. Please try again.", { position: "top-center" });
+    }
+  };
+
+
   return (
-    // Removed the outer <> </> (Fragment) as Navbar is no longer rendered
     <div className="orders-modern-container">
+      <ToastContainer /> {/* Placed ToastContainer here for global access */}
       <div className="orders-modern-header">
         <h2 className="header-title">Your Orders</h2>
         <div className="header-buttons">
@@ -273,7 +303,7 @@ function OrdersPage() {
                     <p>
                       <span className="detail-label">Payment Mode:</span> {order.paymentMode}
                     </p>
-                    {order.orderStage.toLowerCase() === 'pending' && (
+                    {(order.orderStage.toLowerCase() === 'pending' || order.orderStage.toLowerCase() === 'completed') && (
                         <p>
                           <span className="detail-label">Delivery Partner:</span> {order.deliveryPartner}
                         </p>
@@ -288,7 +318,7 @@ function OrdersPage() {
                       <FaFileInvoice /> Generate Invoice
                     </button>
                     {order.orderStage.toLowerCase() === 'pending' && (
-                        <button className="cancel-order-btn">
+                        <button className="cancel-order-btn" onClick={() => handleCancelOrder(order.id)}>
                           Cancel Order
                         </button>
                     )}

@@ -1,33 +1,27 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
-import { FaArrowLeft } from 'react-icons/fa';   // Import the icon you're using (make sure react-icons is installed)
-import './AboutUsPage.css'; // Ensure this CSS file is in the same directory
+import { useNavigate } from 'react-router-dom';
+import { FaArrowLeft } from 'react-icons/fa';
+import './AboutUsPage.css';
 
 const AboutUsPage = () => {
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const navigate = useNavigate();
 
   const handleBackToMenuClick = () => {
-    navigate('/user/home'); // Navigate to the '/user/home' route
-    // Or, if you want to go back to the previous page in history:
-    // navigate(-1);
-    // console.log('Navigating back to menu/home page...'); // For debugging
+    navigate('/user/home');
   };
 
   return (
     <div className="about-us-container">
       <header className="about-us-header">
-        <h1>About Tasty Bites App</h1> {/* Emphasizing 'App' */}
+        <h1>About Tasty Bites App</h1>
         <p>Your seamless journey to delicious food, right at your fingertips.</p>
       </header>
 
-      {/* NEW: Back to Menu Button */}
       <div className="menu-button-container">
-        {/* Call the handler function on click */}
         <button onClick={handleBackToMenuClick} className="nav-text-btn">
           <FaArrowLeft className="nav-icon" /> Back to Menu
         </button>
       </div>
-      {/* END NEW */}
 
       <section className="about-us-content">
         <div className="about-us-section">
@@ -69,7 +63,6 @@ const AboutUsPage = () => {
           <p>
             Every feature, every partnership, and every update to the Tasty Bites App is driven by our commitment to your satisfaction. We are constantly innovating to enhance your experience, ensuring secure transactions, exceptional customer support, and a constantly growing selection of culinary delights. Your feedback fuels our progress!
           </p>
-          {/* Placeholder for an app screenshot or team photo */}
           <img
             src="https://dcassetcdn.com/design_img/500681/148570/148570_3650142_500681_image.png"
             alt="Tasty Bites App in action"
@@ -81,9 +74,8 @@ const AboutUsPage = () => {
       <section className="about-us-map">
         <h2>Our Main Office</h2>
         <div className="map-container">
-          {/* Google Maps embed for Hyderabad, Telangana, India */}
           <iframe
-            src="https://www.google.com/maps/search/sathya+technologies+map+embed+code/@17.436875,78.4445,18z?entry=ttu&g_ep=EgoyMDI1MDcyMC4wIKXMDSoASAFQAw%3D%3D"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15229.412497805166!2d78.44754759999999!3d17.385044!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcbb5d37617c059%3A0x7387431e67b2d55!2sHyderabad%2C%20Telangana!5e0!3m2!1sen!2sin!4v1701388800000!5m2!1sen!2sin"
             width="600"
             height="450"
             style={{ border: 0 }}
@@ -100,7 +92,6 @@ const AboutUsPage = () => {
           Ready to taste the convenience? Download the **Tasty Bites App** today!
         </p>
         <div className="app-download-links">
-          {/* Replace with actual app store links */}
           <a href="#" target="_blank" rel="noopener noreferrer">
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"

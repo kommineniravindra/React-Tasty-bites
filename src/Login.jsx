@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-import './Login.css'; // Make sure this has the spinner CSS too
+import './Login.css';
 
 function Login() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -16,31 +16,44 @@ function Login() {
     setError('');
 
     try {
+      // This is the correct way to send the email and password,
+      // matching your backend's LoginDetails DTO (which expects an 'email' field).
       const response = await axios.post('https://spring-apigateway.onrender.com/api/auth/login', {
-        username,
+        email: email, // This is correctly sending 'email' as the key
         password
       });
 
-      const token = response.data;
+      const { token, role, email: loggedInEmail } = response.data; // Backend's AuthResponse correctly returns 'email'
+
+      // Storing authentication and user details in localStorage
       localStorage.setItem('token', token);
-
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const role = payload.role;
-      const user = {
-        username: payload.sub || username,
-        role: payload.role
-      };
-
       localStorage.setItem('role', role);
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('username', loggedInEmail); // Storing email under 'username' key for compatibility with other components
+      
+      // Storing a parsed user object for more structured data access
+      const userObject = { username: loggedInEmail, role: role, email: loggedInEmail };
+      localStorage.setItem('user', JSON.stringify(userObject));
+      
+      // Storing email explicitly under 'email' key for direct access
+      localStorage.setItem('email', loggedInEmail); 
 
       setLoading(false);
-      if (role === 'ADMIN') navigate('/admin/dashboard');
-      else navigate('/user/home');
 
-    } catch (error) {
+      // Navigate based on user role
+      if (role === 'ADMIN') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/user/home');
+      }
+
+    } catch (err) {
       setLoading(false);
-      setError('Login failed: ' + (error.response?.data || error.message));
+      // Detailed error handling based on backend response
+      if (err.response && err.response.status === 401 && err.response.data && err.response.data.message) {
+        setError(err.response.data.message); // Display specific backend message (e.g., "Invalid email or password")
+      } else {
+        setError('Login failed. Please check your network connection or try again later.'); // Generic fallback error
+      }
     }
   };
 
@@ -67,11 +80,12 @@ function Login() {
 
           <form className="auth-form" onSubmit={handleLogin}>
             <input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={e => setUsername(e.target.value)}
+              type="email" // Input type for email
+              placeholder="Email" // Placeholder text
+              value={email}
+              onChange={e => setEmail(e.target.value)}
               required
+              disabled={loading}
             />
             <input
               type="password"
@@ -79,6 +93,7 @@ function Login() {
               value={password}
               onChange={e => setPassword(e.target.value)}
               required
+              disabled={loading}
             />
             <button type="submit" disabled={loading}>
               {loading ? <span className="spinner"></span> : 'Login'}

@@ -3,12 +3,11 @@ import { useCart } from './CartContext';
 import { useNavigate } from 'react-router-dom';
 import './CartPage.css';
 import QRCode from 'react-qr-code';
-import { FaLock, FaQuestionCircle, FaShieldAlt, FaQrcode, FaCreditCard, FaChevronDown, FaChevronUp, FaPlusCircle, FaArrowLeft, FaClipboardList, FaEnvelope } from 'react-icons/fa'; // Import FaEnvelope
+import { FaLock, FaQrcode, FaCreditCard, FaChevronDown, FaChevronUp, FaArrowLeft, FaClipboardList, FaEnvelope } from 'react-icons/fa';
 import emailjs from '@emailjs/browser';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// Utility function for debouncing
 const debounce = (func, delay) => {
   let timeout;
   return function(...args) {
@@ -35,37 +34,31 @@ const CartPage = () => {
   const [discount, setDiscount] = useState(0);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
-  // State for collapsible sections
-  const [visibleSection, setVisibleSection] = useState(''); // For payment methods
-  const [isBillSummaryOpen, setIsBillSummaryOpen] = useState(true); // For Bill Summary
-  const [isEmailSectionOpen, setIsEmailSectionOpen] = useState(true); // NEW: For Email Section
+  const [visibleSection, setVisibleSection] = useState('');
+  const [isBillSummaryOpen, setIsBillSummaryOpen] = useState(true);
+  const [isEmailSectionOpen, setIsEmailSectionOpen] = useState(true);
 
-
-  // Card payment form states
   const [cardNumber, setCardNumber] = useState('');
   const [cardHolder, setCardHolder] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
 
-  // State for quantity animation
   const [quantityAnimatingItemId, setQuantityAnimatingItemId] = useState(null);
 
   const navigate = useNavigate();
 
   const token = localStorage.getItem('token');
-  const customerEmail = localStorage.getItem('email') || '';
+  const customerEmail = localStorage.getItem('email') || ''; // This will now get a value from Login/Signup
   const [userEmail, setUserEmail] = useState(customerEmail);
-  const showEmailInput = !customerEmail; 
+  const showEmailInput = !customerEmail;
 
-  // Fixed values for shipping and tax, now ensuring they are numbers for calculation
   const shippingCost = 20;
   const taxCost = 20;
 
-  // Calculate dynamic parts
   const discountAmount = (totalAmount * discount) / 100;
-  const estimatedTotal = (totalAmount - discountAmount + shippingCost + taxCost).toFixed(2);
+  const estimatedTotalNum = totalAmount - discountAmount + shippingCost + taxCost;
+  const estimatedTotal = estimatedTotalNum.toFixed(2);
 
 
-  // EmailJS service IDs
   const SERVICE_ID = 'service_o1fbb8a';
   const TEMPLATE_ID = 'template_uy7nn2j';
   const PUBLIC_KEY = 'QT4vFNSyQjWyMeDEz';
@@ -75,7 +68,6 @@ const CartPage = () => {
     return colors[Math.floor(Math.random() * colors.length)];
   };
 
-  // Debounced version of updateQuantity for API calls
   const debouncedUpdateQuantityAPI = useRef(
     debounce(async (itemId, newQuantity) => {
       console.log(`API Call: Updated quantity for item ${itemId} to ${newQuantity}`);
@@ -86,7 +78,6 @@ const CartPage = () => {
     }, 300)
   ).current;
 
-  // Optimistic UI update for quantity
   const updateQuantity = useCallback((itemId, newQuantityValue) => {
     const currentItem = cartItems.find(item => item.id === itemId);
     if (!currentItem) return;
@@ -104,7 +95,6 @@ const CartPage = () => {
 
   }, [cartItems, originalUpdateQuantity, debouncedUpdateQuantityAPI]);
 
-  // Optimistic UI update for remove from cart
   const removeFromCart = useCallback((itemId) => {
     const itemToRemove = cartItems.find(item => item.id === itemId);
     if (!itemToRemove) return;
@@ -128,8 +118,6 @@ const CartPage = () => {
     console.log(`API Call: Removed item ${itemId}`);
   }, [cartItems, originalRemoveFromCart]);
 
-
-  // Handle promo code submission
   const handlePromoCodeSubmit = () => {
     const code = promoCodeInput.toUpperCase();
     let newDiscount = 0;
@@ -154,7 +142,6 @@ const CartPage = () => {
     }
   };
 
-  // Logic for free shipping message (based on template's visual "$10.01 away")
   const freeShippingThreshold = 200;
   const remainingForFreeShipping = freeShippingThreshold - totalAmount;
   const freeShippingProgress = Math.min(100, (totalAmount / freeShippingThreshold) * 100);
@@ -181,7 +168,6 @@ const CartPage = () => {
         return;
     }
 
-
     setIsCheckingOut(true);
 
     try {
@@ -197,7 +183,8 @@ const CartPage = () => {
             price: item.price,
             quantity: item.quantity,
           })),
-          totalAmount: estimatedTotal,
+          totalAmount: estimatedTotalNum, // Send the numerical value
+          status: "PENDING", // Add an initial status for the backend
         }),
       });
 
@@ -218,8 +205,8 @@ const CartPage = () => {
         })),
         cost: {
           subtotal: totalAmount.toFixed(2),
-          tax: taxCost.toFixed(2), // Use numerical taxCost
-          shipping: shippingCost.toFixed(2), // Use numerical shippingCost
+          tax: taxCost.toFixed(2),
+          shipping: shippingCost.toFixed(2),
           discount: discountAmount.toFixed(2),
           total: estimatedTotal,
         }
@@ -260,7 +247,7 @@ const CartPage = () => {
     setIsBillSummaryOpen((prev) => !prev);
   };
 
-  const toggleEmailSection = () => { // NEW: Toggle function for Email Section
+  const toggleEmailSection = () => {
     setIsEmailSectionOpen((prev) => !prev);
   };
 
@@ -294,7 +281,6 @@ const CartPage = () => {
       <ToastContainer />
       <h2 className="my-cart-heading">My Cart ({cartItems.length})</h2>
 
-      {/* Conditional rendering for empty cart / checkout success vs. active cart */}
       {isCheckedOut || cartItems.length === 0 ? (
         <>
           <div className="empty-cart-animation">
@@ -346,7 +332,6 @@ const CartPage = () => {
         </>
       ) : (
         <div className="cart-content-template">
-          {/* Left Column: Cart Items */}
           <div className="cart-main-column">
             <table className="cart-items-table">
               <thead>
@@ -409,9 +394,7 @@ const CartPage = () => {
             <button className="clear-cart-btn" onClick={clearCart}>Clear All Items</button>
           </div>
 
-          {/* Right Column: Order Summary and Payment */}
           <div className="cart-sidebar-column">
-            {/* Promo Code Section */}
             <div className="promo-code-section">
               <label htmlFor="promo-code-input" className="promo-code-label">ENTER PROMO CODE</label>
               <div className="promo-input-group">
@@ -428,7 +411,6 @@ const CartPage = () => {
               </div>
             </div>
 
-            {/* Bill Summary Section (Collapsible) */}
             <div className={`payment-method-panel ${isBillSummaryOpen ? 'active' : ''}`}>
                 <div className="panel-header" onClick={toggleBillSummary}>
                     <FaClipboardList className="panel-icon" />
@@ -460,7 +442,6 @@ const CartPage = () => {
                     </div>
                 )}
             </div>
-            {/* Dynamic Free Shipping Progress Bar */}
             {remainingForFreeShipping > 0 && (
                 <div className="free-shipping-progress-container">
                     <p className="free-shipping-progress-text">You're ₹{remainingForFreeShipping.toFixed(2)} away from free shipping!</p>
@@ -475,15 +456,14 @@ const CartPage = () => {
                 </div>
             )}
 
-            {/* NEW: Email Section (Collapsible) */}
             <div className={`payment-method-panel ${isEmailSectionOpen ? 'active' : ''}`}>
                 <div className="panel-header" onClick={toggleEmailSection}>
-                    <FaEnvelope className="panel-icon" /> {/* Envelope icon for email */}
+                    <FaEnvelope className="panel-icon" />
                     <span>Email for Order Details</span>
                     {isEmailSectionOpen ? <FaChevronUp /> : <FaChevronDown />}
                 </div>
                 {isEmailSectionOpen && (
-                    <div className="panel-content"> {/* No specific template class for email content needed unless unique styling */}
+                    <div className="panel-content">
                         {showEmailInput ? (
                             <div className="email-input-section">
                                 <p className="email-prompt">Enter your email for order details:</p>
@@ -505,12 +485,9 @@ const CartPage = () => {
                 )}
             </div>
 
-
-            {/* Payment Options Container (collapsible panels) */}
             <div className="payment-options-container">
                 <h4 className="payment-options-heading">Choose Payment Method</h4>
 
-                {/* QR Code Payment Section */}
                 <div className={`payment-method-panel ${visibleSection === 'qr' ? 'active' : ''}`}>
                     <div className="panel-header" onClick={() => toggleSection('qr')}>
                         <FaQrcode className="panel-icon" />
@@ -537,7 +514,6 @@ const CartPage = () => {
                     )}
                 </div>
 
-                {/* Card Payment Section */}
                 <div className={`payment-method-panel ${visibleSection === 'card' ? 'active' : ''}`}>
                     <div className="panel-header" onClick={() => toggleSection('card')}>
                         <FaCreditCard className="panel-icon" />
@@ -599,10 +575,8 @@ const CartPage = () => {
           </div>
         </div>
       )}
-
     </div>
   );
 };
 
 export default CartPage;
- 

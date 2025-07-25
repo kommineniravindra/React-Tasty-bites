@@ -13,7 +13,7 @@ const AdminDashboard = () => {
   const [weeklyRevenue, setWeeklyRevenue] = useState([]);
   const [orders, setOrders] = useState([]);
   const [activeView, setActiveView] = useState('dashboard');
-  const [loading, setLoading] = useState(true); // New state for loading
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -24,7 +24,7 @@ const AdminDashboard = () => {
   }, []);
 
   const fetchData = async () => {
-    setLoading(true); // Set loading to true before fetching
+    setLoading(true);
     try {
       await Promise.all([
         fetchProducts(),
@@ -34,9 +34,8 @@ const AdminDashboard = () => {
       ]);
     } catch (error) {
       console.error("Error fetching all data:", error);
-      // Optionally, display an error message to the user
     } finally {
-      setLoading(false); // Set loading to false after fetching (success or failure)
+      setLoading(false);
     }
   };
 
@@ -47,7 +46,7 @@ const AdminDashboard = () => {
     .then(res => setProducts(res.data))
     .catch(err => {
       console.error("Error fetching products", err);
-      throw err; // Re-throw to be caught by Promise.all
+      throw err;
     });
   };
 
@@ -138,7 +137,7 @@ const AdminDashboard = () => {
   };
 
   const handleRefresh = () => {
-    fetchData(); // Call fetchData to refresh all data
+    fetchData();
   };
 
   return (
@@ -284,7 +283,6 @@ const AdminDashboard = () => {
                       <th>Order ID</th>
                       <th>Customer</th>
                       <th>Items</th>
-
                       <th>Amount</th>
                       <th>Status</th>
                       <th>Action</th>

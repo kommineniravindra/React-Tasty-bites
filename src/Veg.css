@@ -1,5 +1,6 @@
 .veg-section {
-  padding: 10px;
+  margin-top: 50px;
+  padding: 5px;
   background-color: #f5f5f5;
   min-height: 100vh;
   font-family: 'Segoe UI', sans-serif;
@@ -14,14 +15,13 @@
   font-weight: bold;
 }
 
-/* Updated Checkbox Filter Styles */
+/* Checkbox Filter Styles */
 .checkbox-filter {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   gap: 16px;
-  margin-top: 0px;
-  margin-bottom: 10px;
+  margin: 0;
   padding: 10px;
 }
 
@@ -31,7 +31,7 @@
   gap: 8px;
   font-weight: 600;
   font-size: 1rem;
-  color: #222222;
+  color: #222;
   background-color: #f9f9f9;
   padding: 8px 12px;
   border-radius: 8px;
@@ -52,52 +52,56 @@
   cursor: pointer;
 }
 
-
-/* Grid of Cards */
+/* Flex Layout for Cards */
 .card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 24px;
-  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
 }
 
-
-
 .card {
+  flex: 1 1 calc(25% - 40px); /* 4 cards per row */
+  max-width: calc(25% - 40px);
   background-color: #fff;
-  border-radius: 12px;
-  padding: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid #000000;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.12);
   text-align: center;
-  transition: transform 0.2s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
+  min-height: 310px;
+  box-sizing: border-box;
 }
 
 .card:hover {
   transform: translateY(-5px);
+  box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.18);
 }
 
 .card-img {
   width: 100%;
-  height: 160px;
+  height: 140px;
   object-fit: cover;
-  border-radius: 20px;
-  border-bottom-left-radius: 0px;
-  border-top-right-radius: 0px;
-  margin-bottom: 15px;
+  border-radius: 25px;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 0;
+  margin-bottom: 12px;
   border: 1px solid #ffb300;
 }
 
 .card h4 {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: #222;
-  margin: 10px 0 5px;
+  margin: 8px 0 4px;
 }
 
 .card p {
   color: #ff0000;
   font-weight: bold;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 /* Add to Cart Button */
@@ -117,7 +121,7 @@
   background-color: #ffa000;
 }
 
-/* Pagination Buttons */
+/* Pagination Controls */
 .pagination-controls {
   margin-top: 20px;
   display: flex;
@@ -146,53 +150,17 @@
   color: black;
 }
 
-/* Status Messages */
-.status-message {
-  text-align: center;
-  font-size: 1.1rem;
-  color: #333;
-  margin-top: 40px;
-}
-
-.status-message.error {
-  color: red;
-}
-
-
-/* Keep this for centering the spinner and text */
-.spinner-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 200px; 
-  width: 100%;
-}
-
-/* Keep this for the loading text */
-.status-message {
-  text-align: center;
-  font-size: 1.1rem;
-  color: #333;
-  margin-top: 15px; 
-}
-
-.status-message.error {
-  color: red;
-}
-
-
+/* Refresh Button */
 .refresh-button-container {
-  display: flex; 
-  justify-content: flex-end; 
-  margin-bottom: 0px;
-  margin-top: 0px;
-  padding-right: 20px; 
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 10px 0;
+  padding-right: 20px;
 }
 
 .refresh-button {
   padding: 10px 20px;
-  background-color: #000000; /* A nice green color, change as desired */
+  background-color: #000;
   color: white;
   border: none;
   border-radius: 5px;
@@ -203,11 +171,399 @@
 }
 
 .refresh-button:hover:not(:disabled) {
-  background-color: #45a049; 
+  background-color: #45a049;
 }
 
 .refresh-button:disabled {
-  background-color: #cccccc; 
+  background-color: #ccc;
   cursor: not-allowed;
 }
 
+/* Footer */
+.footer {
+    background-color: #333;
+    color: #f8f8f8;
+    padding: 40px 20px;
+    font-size: 0.95em;
+    border-top: 5px solid #ff5722;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-left,
+.footer-middle,
+.footer-right {
+    flex: 1;
+    min-width: 200px;
+    padding: 10px;
+}
+
+.footer-left h3 {
+    color: #ff5722;
+    font-size: 1.8em;
+    margin-top: 0;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.footer-left p {
+    color: #bbb;
+    line-height: 1.5;
+    text-align: left;
+}
+
+.footer-middle h4,
+.footer-right h4 {
+    color: #fff;
+    font-size: 1.2em;
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.footer-middle ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+}
+
+.footer-middle ul li {
+    margin-bottom: 10px;
+}
+
+.footer-middle ul li a {
+    color: #bbb;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-middle ul li a:hover {
+    color: #ff5722;
+    text-decoration: underline;
+}
+
+.footer-right p {
+    margin-bottom: 10px;
+    color: #bbb;
+    text-align: left;
+}
+
+.footer-right a {
+    color: #ff5722;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-right a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 20px;
+    color: #aaa;
+    font-size: 0.85em;
+}
+
+.footer-bottom span {
+    color: #ff5722;
+    font-weight: bold;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+  .card-grid {
+    padding: 15px;
+    gap: 15px;
+  }
+  .card {
+    flex: 1 1 calc(33.33% - 30px); /* 3 cards per row */
+    max-width: calc(33.33% - 30px);
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 992px) {
+  .section-title {
+    font-size: 1.8rem;
+  }
+  .checkbox-filter {
+    gap: 12px;
+    padding: 8px;
+  }
+  .checkbox-filter label {
+    font-size: 0.95rem;
+    padding: 6px 10px;
+  }
+  .card-grid {
+    padding: 10px;
+    gap: 15px;
+  }
+  .card {
+    flex: 1 1 calc(50% - 30px); /* 2 cards per row */
+    max-width: calc(50% - 30px);
+    min-height: 280px;
+  }
+  .card-img {
+    height: 120px;
+  }
+  .card h4 {
+    font-size: 0.95rem;
+  }
+  .card p {
+    font-size: 0.9rem;
+  }
+  .card button {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+  .refresh-button-container {
+    padding-right: 15px;
+  }
+  .refresh-button {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .veg-section {
+    margin-top: 40px;
+    padding: 0 10px;
+  }
+  .section-title {
+    font-size: 1.6rem;
+    margin-top: 10px;
+  }
+  .checkbox-filter {
+    flex-direction: column; /* Stack checkboxes vertically */
+    align-items: center; /* Center stacked checkboxes */
+    gap: 10px;
+    padding: 5px;
+  }
+  .checkbox-filter label {
+    width: 80%; /* Make labels wider for easier tapping */
+    max-width: 250px;
+    justify-content: center; /* Center text within label */
+    font-size: 0.9rem;
+    padding: 10px 12px;
+  }
+  .card-grid {
+    padding: 10px;
+    gap: 15px;
+  }
+  .card {
+    flex: 1 1 calc(50% - 20px); /* Keep 2 cards per row for medium phones */
+    max-width: calc(50% - 20px);
+    padding: 10px;
+    min-height: 270px;
+  }
+  .card-img {
+    height: 110px;
+    margin-bottom: 10px;
+  }
+  .card h4 {
+    font-size: 0.9rem;
+  }
+  .card p {
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+  }
+  .card button {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+  .pagination-controls {
+    flex-wrap: wrap; /* Allow pagination buttons to wrap */
+    gap: 8px;
+    margin-top: 15px;
+  }
+  .pagination-controls button {
+    padding: 7px 10px;
+    font-size: 0.85rem;
+  }
+  .refresh-button-container {
+    padding-right: 10px;
+    justify-content: center; /* Center refresh button on mobile */
+    margin-bottom: 5px;
+  }
+  .refresh-button {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    width: 80%; /* Make button wider */
+    max-width: 250px;
+  }
+
+  .footer-content {
+    flex-direction: column; /* Stack footer columns vertically */
+    align-items: center; /* Center items when stacked */
+    text-align: center; /* Center text within stacked columns */
+  }
+
+  .footer-left,
+  .footer-middle,
+  .footer-right {
+    min-width: unset;
+    width: 100%; /* Take full width */
+    margin-bottom: 20px; /* Add space between stacked sections */
+    padding: 0 15px; /* Adjust padding */
+  }
+
+  .footer-left h3,
+  .footer-left p,
+  .footer-middle h4,
+  .footer-middle ul,
+  .footer-right h4,
+  .footer-right p {
+    text-align: center; /* Center all text when columns are stacked */
+  }
+
+  .footer-middle ul li {
+    display: inline-block; /* For horizontal list */
+    margin: 0 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .veg-section {
+    margin-top: 30px;
+    padding: 0 5px;
+  }
+  .section-title {
+    font-size: 1.4rem;
+    margin-top: 5px;
+  }
+  .checkbox-filter {
+    gap: 8px;
+    padding: 5px;
+  }
+  .checkbox-filter label {
+    font-size: 0.85rem;
+    padding: 8px 10px;
+  }
+  .card-grid {
+    padding: 5px;
+    gap: 10px;
+  }
+  .card {
+    flex: 1 1 100%; /* Single card per row */
+    max-width: 100%;
+    padding: 10px;
+    min-height: unset; /* Remove min-height for very small screens to allow content to dictate height */
+  }
+  .card-img {
+    height: 100px;
+    margin-bottom: 8px;
+  }
+  .card h4 {
+    font-size: 0.85rem;
+  }
+  .card p {
+    font-size: 0.8rem;
+    margin-bottom: 6px;
+  }
+  .card button {
+    padding: 7px 8px;
+    font-size: 0.8rem;
+  }
+  .pagination-controls {
+    gap: 5px;
+    margin-top: 10px;
+  }
+  .pagination-controls button {
+    padding: 6px 8px;
+    font-size: 0.8rem;
+  }
+  .refresh-button-container {
+    padding-right: 5px;
+  }
+  .refresh-button {
+    padding: 8px 15px;
+    font-size: 0.85rem;
+    width: 90%;
+  }
+
+  .footer {
+    padding: 30px 15px;
+  }
+  .footer-left h3 {
+    font-size: 1.6em;
+  }
+  .footer-middle h4,
+  .footer-right h4 {
+    font-size: 1.1em;
+  }
+  .footer-left p,
+  .footer-middle ul li a,
+  .footer-right p,
+  .footer-bottom p {
+    font-size: 0.85em;
+  }
+  .footer-middle ul li {
+    margin: 0 8px;
+  }
+  .footer-bottom {
+    padding-top: 15px;
+  }
+}
+
+@media (max-width: 375px) {
+  .section-title {
+    font-size: 1.2rem;
+  }
+  .checkbox-filter label {
+    font-size: 0.8rem;
+    padding: 6px 8px;
+  }
+  .card-img {
+    height: 90px;
+  }
+  .card h4 {
+    font-size: 0.8rem;
+  }
+  .card p {
+    font-size: 0.75rem;
+  }
+  .card button {
+    padding: 6px 8px;
+    font-size: 0.75rem;
+  }
+  .pagination-controls button {
+    padding: 5px 6px;
+    font-size: 0.75rem;
+  }
+  .refresh-button {
+    padding: 7px 12px;
+    font-size: 0.8rem;
+  }
+  .footer {
+    padding: 25px 10px;
+  }
+  .footer-left h3 {
+    font-size: 1.4em;
+  }
+  .footer-middle h4,
+  .footer-right h4 {
+    font-size: 1em;
+  }
+  .footer-left p,
+  .footer-middle ul li a,
+  .footer-right p,
+  .footer-bottom p {
+    font-size: 0.8em;
+  }
+  .footer-middle ul li {
+    margin: 0 5px;
+  }
+}

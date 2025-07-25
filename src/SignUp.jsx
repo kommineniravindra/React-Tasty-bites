@@ -6,9 +6,9 @@ import './Signup.css';
 function Signup() {
   const navigate = useNavigate();
   const [user, setUser] = useState({
-    username: '',
+    email: '',
     password: '',
-    role: 'USER',
+    role: 'USER', // Default to USER, but now user can change it
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -17,19 +17,49 @@ function Signup() {
     e.preventDefault();
     setLoading(true);
     setError('');
+
+    if (user.password.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      setLoading(false);
+      return;
+    }
+
     try {
-      await axios.post('https://spring-apigateway.onrender.com/api/auth/signup', user);
+      const response = await axios.post('https://spring-apigateway.onrender.com/api/auth/signup', {
+        username: user.email, // Backend's AuthController still expects 'username'
+        password: user.password,
+        role: user.role // Send the selected role
+      });
+      
       alert('Signup successful! Please log in.');
+
+      // Set localStorage items after successful signup, similar to login
+      localStorage.setItem('username', user.email);
+      localStorage.setItem('role', user.role);
+      localStorage.setItem('user', JSON.stringify({ username: user.email, role: user.role, email: user.email }));
+      localStorage.setItem('email', user.email);
+
       navigate('/login');
+
     } catch (err) {
-      if (err.response?.status === 400) {
-        setError('User already exists.');
+      if (err.response?.status === 409) {
+        setError('Email already exists.');
+      } else if (err.response?.data) {
+        setError(err.response.data);
       } else {
-        setError('Signup failed. Try again later.');
+        setError('Signup failed. Please try again later.');
       }
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUser(prevUser => ({
+      ...prevUser,
+      [name]: value
+    }));
   };
 
   return (
@@ -55,29 +85,38 @@ function Signup() {
 
           <form onSubmit={handleSubmit}>
             <input
-              type="text"
-              placeholder="Username"
-              value={user.username}
-              onChange={(e) => setUser({ ...user, username: e.target.value })}
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={user.email}
+              onChange={handleChange}
               required
+              disabled={loading}
             />
             <input
               type="password"
+              name="password"
               placeholder="Password"
               value={user.password}
-              onChange={(e) => setUser({ ...user, password: e.target.value })}
+              onChange={handleChange}
               required
+              disabled={loading}
             />
+            {/* Re-introducing the role selection dropdown */}
             <select
+              name="role"
               value={user.role}
-              onChange={(e) => setUser({ ...user, role: e.target.value })}
+              onChange={handleChange}
               required
+              disabled={loading}
+              className="role-select" // Add a class for potential styling
             >
               <option value="USER">User</option>
               <option value="ADMIN">Admin</option>
             </select>
+            {/* End of role selection */}
             <div className="terms">
-              <input type="checkbox" required />
+              <input type="checkbox" required disabled={loading} />
               <label>I accept the terms and policy</label>
             </div>
             <button type="submit" disabled={loading}>
